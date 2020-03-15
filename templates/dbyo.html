@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+    <title>Carstock - Home</title>
+    <meta charset="utf-8">
+	<link rel="stylesheet" href="/static/style.css">
+</head>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Carstock</a></li>
+                <li><a href="bestellungen">Bestellungen</a></li>
+                <li><a href="ersatzteilliste">Ersatzteilliste</a></li>
+                <li><form class="form-inline my-2 my-lg-0"></li>
+                <li> <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> </form></li>
+            </ul>
+        </nav>
+    </header>
+    
+<body>
+{{ Ersatzteile}}
+<table id="customers">
+<tr>
+    <th>{{Ersatzteile[0]}}</th>
+    <th>Contact</th>
+    <th>Country</th>
+  </tr>
+  <tr>
+    <th>{{Ersatzteile[1]}}</th>
+    <th>Contact</th>
+    <th>Country</th>
+  </tr>
+</table>
+</body>
+
+<footer>
+    Footer
+
+</footer>
+         
+
+</html>
