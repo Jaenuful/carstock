@@ -23,7 +23,7 @@ header {
 }
 
 section {
-    background: white;
+    background: rgb(216, 214, 214);
     padding: 10px 30px 10px 20px
 }
 
@@ -47,27 +47,3 @@ li {
     display: inline-block;
     margin: 0px 15px 0px 0px;
 }
-
-#Beispielliste als Platzhalter
-#customers {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  #customers td, #customers th {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  #customers tr:nth-child(even){background-color: #f2f2f2;}
-  
-  #customers tr:hover {background-color: #ddd;}
-  
-  #customers th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: rgba(62, 199, 233, 0.925);
-    color: white;
-

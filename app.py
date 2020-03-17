@@ -2,18 +2,29 @@ from flask import Flask, render_template, url_for, flash, redirect
 from forms import RegistrationForm, LoginForm
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select
-from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, inspect, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.session import Session, sessionmaker
+import datetime as dt
+from sqlalchemy.dialects.postgresql import JSON
 
 
 app = Flask(__name__)
+
+engine = create_engine('postgresql://postgres:root@localhost/carstock')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/carstock'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+Base = declarative_base()   
+Session = sessionmaker()
+metadata = MetaData()
 
 class ErsatzteileAlchemy(db.Model):
+    __tablename__ = 'ersatzteile_alchemy'
+    Base.metadata.create_all(engine)
     Artikelnummer = db.Column(db.Integer, primary_key=True)
     Bezeichnung = db.Column(db.String(120), unique=False, nullable=False)
     Details = db.Column(db.String(120), unique=False, nullable=True)
@@ -26,15 +37,14 @@ class ErsatzteileAlchemy(db.Model):
         self.Geraet = Geraet
 
     def __repr__(self):
-        return "<Ersatzteile(tiArtieklnummer='{}', author='{}', pages={}, published={})>"\
+        return "Artikelnummer{}, Bezeichnung={}, Details={}, Gerät={}"\
                 .format(self.Artikelnummer, self.Bezeichnung, self.Details, self.Geraet)
         #return '<%r>' % self.Bezeichnung
         #return 'self.Artikelnummer'
 
-
-
-
-
+#db.create_all()
+#db.session.commit()
+#print(ErsatzteileAlchemy)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,11 +58,9 @@ class User(db.Model):
     def __repr__(self):
         #return '<User %r>' % self.username
         return self
+        
 
-
-
-
-@app.route('/login', methods=['GET', 'POST'])
+app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
@@ -66,10 +74,10 @@ def login():
 def index():
     return render_template('index.html')
 
-@app.route('/dbyo')
-def dbyo():
+@app.route('/ersatzteilliste')
+def ersatzteilliste():
     Ersatzteile = ErsatzteileAlchemy.query.all()
-    return render_template('dbyo.html',Ersatzteile=Ersatzteile)
+    return render_template('ersatzteilliste.html',Ersatzteile = Ersatzteile)
 
 
 @app.route('/carstock')
@@ -80,9 +88,6 @@ def carstock():
 def bestellungen():
     return render_template('bestellungen.html')
 
-@app.route('/ersatzteilliste')
-def ersatzteilliste():
-    return render_template('ersatzteilliste.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
