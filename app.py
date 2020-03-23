@@ -24,11 +24,12 @@ metadata = MetaData()
 
 class ErsatzteileAlchemy(db.Model):
     __tablename__ = 'ersatzteile_alchemy'
-    Base.metadata.create_all(engine)
-    Artikelnummer = db.Column(db.Integer, primary_key=True)
-    Bezeichnung = db.Column(db.String(120), unique=False, nullable=False)
-    Details = db.Column(db.String(120), unique=False, nullable=True)
-    Geraet = db.Column(db.String(120), unique=False, nullable=True)
+    #Base.metadata.create_all(engine)
+    #meta = MetaData()
+    Artikelnummer = Column (Integer(), primary_key=True) 
+    Bezeichnung = Column (String(), unique=False, nullable=False)
+    Details = Column (String(), unique=False, nullable=True)
+    Geraet = Column (String(), unique=False, nullable=True)
 
     def __init__(self, Artikelnummer, Bezeichnung, Details, Geraet):
         self.Artikelnummer = Artikelnummer
@@ -36,9 +37,9 @@ class ErsatzteileAlchemy(db.Model):
         self.Details = Details
         self.Geraet = Geraet
 
-    def __repr__(self):
-        return "Artikelnummer{}, Bezeichnung={}, Details={}, Gerät={}"\
-                .format(self.Artikelnummer, self.Bezeichnung, self.Details, self.Geraet)
+#    def __repr__(self):
+ #       return "Artikelnummer{}, Bezeichnung={}, Details={}, Gerät={}"\
+  #              .format(self.Artikelnummer, self.Bezeichnung, self.Details, self.Geraet)
         #return '<%r>' % self.Bezeichnung
         #return 'self.Artikelnummer'
 
@@ -60,16 +61,6 @@ class User(db.Model):
         return self
         
 
-app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-            error = 'Invalid Credentials. Please try again.'
-        else:
-            return redirect(url_for('/index'))
-    return render_template('login.html', error=error)
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -78,6 +69,16 @@ def index():
 def ersatzteilliste():
     Ersatzteile = ErsatzteileAlchemy.query.all()
     return render_template('ersatzteilliste.html',Ersatzteile = Ersatzteile)
+
+app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            return redirect(url_for('/index'))
+    return render_template('login.html', error=error)    
 
 
 @app.route('/carstock')

@@ -1,13 +1,5 @@
-a {
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 body {
-    background: #fafafa;
+    background: #dddbdb;
     color: #333333;
     margin-top: 5rem;
 }
@@ -31,19 +23,5 @@ footer {
     background: #1487aa;
     padding:    20px
 }
-div {
-    display: inline-block;
-    width: auto;
-}
 
-ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    
-}
 
-li {
-    display: inline-block;
-    margin: 0px 15px 0px 0px;
-}
