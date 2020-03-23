@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import RegistrationForm, LoginForm
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select
@@ -18,9 +18,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-Base = declarative_base()   
-Session = sessionmaker()
-metadata = MetaData()
+#Base = declarative_base()   
+#Session = sessionmaker()
+#metadata = MetaData()
 
 class ErsatzteileAlchemy(db.Model):
     __tablename__ = 'ersatzteile_alchemy'
@@ -42,7 +42,6 @@ class ErsatzteileAlchemy(db.Model):
   #              .format(self.Artikelnummer, self.Bezeichnung, self.Details, self.Geraet)
         #return '<%r>' % self.Bezeichnung
         #return 'self.Artikelnummer'
-
 #db.create_all()
 #db.session.commit()
 #print(ErsatzteileAlchemy)
@@ -61,10 +60,6 @@ class User(db.Model):
         return self
         
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 @app.route('/ersatzteilliste')
 def ersatzteilliste():
     Ersatzteile = ErsatzteileAlchemy.query.all()
@@ -81,13 +76,18 @@ def login():
     return render_template('login.html', error=error)    
 
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/carstock')
 def carstock():
     return render_template('index.html')
 
 @app.route('/bestellungen')
 def bestellungen():
-    return render_template('bestellungen.html')
+    Ersatzteile = ErsatzteileAlchemy.query.all()
+    return render_template('bestellungen.html',Ersatzteile = Ersatzteile)
 
 
 if __name__ == '__main__':
