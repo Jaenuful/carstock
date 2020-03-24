@@ -8,34 +8,22 @@ from sqlalchemy.orm.session import Session, sessionmaker
 import datetime as dt
 from sqlalchemy.dialects.postgresql import JSON
 
-
 app = Flask(__name__)
 
 engine = create_engine('postgresql://postgres:root@localhost/carstock')
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/carstock'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
 #Base = declarative_base()   
 #Session = sessionmaker()
 #metadata = MetaData()
 
-class ErsatzteileAlchemy(db.Model):
-    __tablename__ = 'ersatzteile_alchemy'
-    #Base.metadata.create_all(engine)
-    #meta = MetaData()
-    Artikelnummer = Column (Integer(), primary_key=True) 
-    Bezeichnung = Column (String(), unique=False, nullable=False)
-    Details = Column (String(), unique=False, nullable=True)
-    Geraet = Column (String(), unique=False, nullable=True)
-
-    def __init__(self, Artikelnummer, Bezeichnung, Details, Geraet):
-        self.Artikelnummer = Artikelnummer
-        self.Bezeichnung = Bezeichnung
-        self.Details = Details
-        self.Geraet = Geraet
+#    def __init__(self, Artikelnummer, Bezeichnung, Details, Geraet):
+#        self.Artikelnummer = Artikelnummer
+#        self.Bezeichnung = Bezeichnung
+#        self.Details = Details
+#        self.Geraet = Geraet
 
 #    def __repr__(self):
  #       return "Artikelnummer{}, Bezeichnung={}, Details={}, Gerät={}"\
@@ -46,19 +34,27 @@ class ErsatzteileAlchemy(db.Model):
 #db.session.commit()
 #print(ErsatzteileAlchemy)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
+class ersatzteile_konrad(db.Model):
+    Anzahl = db.Column(Integer(), primary_key = True)
+#    Artikelnummer = db.realtionship('ErsatzteileAlchemy')
+    Bezeichnung = Column (String(), unique=False, nullable=False)
+    Lot = Column (Integer(), primary_key=False)
+    Details = Column (String(), unique=False, nullable=False)
+    Geraet = Column (String(), unique=False, nullable=False) 
 
-    def __repr__(self):
-        #return '<User %r>' % self.username
-        return self
-        
+class ErsatzteileAlchemy(db.Model):
+    __tablename__ = 'ersatzteile_alchemy'
+    Artikelnummer = Column (Integer(), primary_key=True) 
+    Bezeichnung = Column (String(), unique=False, nullable=False)
+    Details = Column (String(), unique=False, nullable=True)
+    Geraet = Column (String(), unique=False, nullable=True)
+
+       
+
+
+@app.route('/KZB', methods = ['GET', 'POST'])
+def ersatzteile_konrad():
+    return render_template('cskzb.html')
 
 @app.route('/ersatzteilliste')
 def ersatzteilliste():
@@ -80,6 +76,7 @@ def login():
 def index():
     return render_template('index.html')
 
+
 @app.route('/carstock')
 def carstock():
     return render_template('index.html')
@@ -88,6 +85,10 @@ def carstock():
 def bestellungen():
     Ersatzteile = ErsatzteileAlchemy.query.all()
     return render_template('bestellungen.html',Ersatzteile = Ersatzteile)
+
+@app.route('/ausgang')
+def ausgang():
+    return render_template('ausgang.html')
 
 
 if __name__ == '__main__':
