@@ -1,24 +1,30 @@
 {% extends 'layout.html' %}
-{% block content %} 
+{% block content %}
   <body>
     <div class="mt-4">
         <table id="proxies" class="display table nowrap responsive" style="width: 100%">
             <thead class="thead-dark">
                 <tr>
+                  <th>Anzahl
                   <th>Ref
                   <th>Bezeichnung
-                  <th>Details
-                  <th>Gerät
+                  <th>Techniker
+                  <th>Kunde
+                  <th>Datum
+                  <th>SMR
               </thead>
                 <tbody>
-                {% for Ersatzteile in Ersatzteile %}
+                
                 <tr>
-                  <td>{{Ersatzteile.Artikelnummer}}
-                  <td>{{Ersatzteile.Bezeichnung}}
-                  <td>{{Ersatzteile.Details}}
-                  <td>{{Ersatzteile.Geraet}}
+                  <td>2
+                  <td>24453
+                  <td>pH - Sensor
+                  <td>JWI
+                  <td>Novartis Pharma AG
+                  <td>02.03.2020  
+                  <td>110977
                 </tr>
-                      {% endfor %}
+                    
                 </tbody>
             </table>
           
