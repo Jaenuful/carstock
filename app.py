@@ -19,8 +19,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/ca
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
-
 #Base = declarative_base()   
 #Session = sessionmaker()
 #metadata = MetaData()
@@ -52,22 +50,64 @@ class ErsatzteileKonrad(db.Model):
     __tablename__ = 'ersatzteile_konrad'
     Anzahl = Column(Integer(), primary_key = True)
     Artikelnummer = Column (Integer(), primary_key=True) 
-    Bezeichnung = Column (String(), unique=False, nullable=True)
+ #   Bezeichnung = input(f"ErsatzteileAlchemy for '{ersatzteile_alchemy.Bezeichnung}': $")
+ #   Artikelnummer = db.realtionship('ErsatzteileAlchemy'), Column (Integer(), ForeignKey) 
+    Bezeichnung = Column(Integer(), primary_key=False)
     Ablaufdatum = Column (Integer(), primary_key=False, nullable=True)
     Lot = Column (Integer(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
-#    ErsatzteileAlchemy_Bezeichnung = db.Column(Integer(), ForeignKey(ErsatzteileAlchemy.Bezeichnung))
 
-@app.route('/KZB', methods = ['GET', 'POST'])
+    def __init__(self, Anzahl, Artikelnummer, Bezeichnung, Ablaufdatum, Lot, Details, Geraet):
+        self.Anzahl = Anzahl
+        self.Artikelnummer = Artikelnummer
+        self.Bezeichnung = Bezeichnung
+        self.Ablaufdatum = Ablaufdatum
+        self.Lot = Lot
+        self.Details = Details
+        self.Geraet = Geraet
+
+    #def __repr__(self):
+     #   return 'Anzahl{}', 'Artikelnummer{}', 'Bezeichnung={}', 'Ablaufdatum{}', 'Lot{}', 'Details={}', 'Gerät={}'\
+      #        .format(self.Anzahl, self.Artikelnummer, self.Bezeichnung,  self.Ablaufdatum,  self.Lot, self.Details, self.Geraet)
+        #return '<ErsatzteileKonrad%r>' % self.Anzahl
+        #db.session.add()
+        #db.session.commit()
+
+#   ErsatzteileAlchemy_Bezeichnung = db.Column(Integer(), ForeignKey(ErsatzteileAlchemy.Bezeichnung))
+
+@app.route('/kzb/update', methods = ['Get','POST'])
+def update_kzb():
+    if request.method == 'POST':
+        ersatzteile_konrad = (request.form['Anzahl'], request.form['Artikelnummer'], request.form['Bezeichnung'], request.form['Ablaufdatum'],
+                request.form['Lot'], request.form['Details'], request.form['Geraet'])
+
+        #Anzahl = request.form['Anzahl']
+        #Artikelnummer = request.form['Artikelnummer']
+        #Bezeichnung = request.form['Bezeichnung']
+        #Ablaufdatum = request.form['Ablaufdatum']
+        #Lot = request.form['Lot']
+        #Details = request.form['Details']
+        #Geraet = request.form['Geraet']
+
+        db.session.add(ersatzteile_konrad)
+        db.session.commit()
+        flash('Record was successfully added')
+        return redirect(url_for('update_kzb.html'))
+
+    return render_template('update_kzb.html', title = 'update.kzb')
+
+@app.route('/kzb', methods = ['Get','POST'])
 def ersatzteile_kzb():
     ersatzteile_konrad = ErsatzteileKonrad.query.all()
-    return render_template('cskzb.html', ersatzteile_konrad = ersatzteile_konrad, title = 'kzb')
+
+    return render_template('kzb.html', ersatzteile_konrad = ersatzteile_konrad, title = 'kzb')
+
 
 @app.route('/ersatzteilliste')
 def ersatzteilliste():
     Ersatzteile = ErsatzteileAlchemy.query.all()
-    return render_template('ersatzteilliste.html',Ersatzteile = Ersatzteile, title = 'Ersatzteilliste')
+    return render_template('ersatzteilliste.html', Ersatzteile = Ersatzteile, title = 'Ersatzteilliste')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

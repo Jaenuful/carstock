@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+{% block content %} 
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Techniker:</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/kzb">Konrad Zbinden <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Alexander Kauer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Jan Willimann</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    
+    <div class="mt-6">
+      <table id="kzb" class="display table nowrap responsive" style="width: 100%">
+          <thead class="thead-dark">
+            <button type="button" class="btn btn-success float-right"
+              data-toggle="modal" data-target="#mymodal">Neuer Eintrag</button>
+
+
+            <tr>
+              <th>Anzahl
+              <th>Ref
+              <th>Bezeichnung
+              <th>Lot
+              <th>Ablaufdatum
+              <th>Details
+              <th>Gerät
+              <th>Bearbeiten
+          </thead>
+          <tbody>
+            {% for ersatzteile_konrad in ersatzteile_konrad %}
+            <tr>
+              <td>{{ersatzteile_konrad.Anzahl}}
+              <td>{{ersatzteile_konrad.Artikelnummer}}
+              <td>{{ersatzteile_konrad.Bezeichnung}}
+              <td>{{ersatzteile_konrad.Lot}}
+              <td>{{ersatzteile_konrad.Ablaufdatum}}
+              <td>{{ersatzteile_konrad.Details}}
+              <td>{{ersatzteile_konrad.Geraet}}
+              <td><a href="/update/{{ersatzteile_konrad.Anzahl}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit">Edit</a>
+                            <a href="/delete" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete ?')">Delete</a>
+            </tr>
+                  {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+                      <!-- Modal Ersatzteil hinzufügen-->
+ 
+<div id="mymodal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+     <div class="modal-content">
+        <div class="modal-header">
+
+           <h4 class="modal-title">Ersatzteil hinzufügen</h4></div>
+
+        <div class="modal-body">
+
+           <form action="{{url_for('update_kzb')}}" method="POST">
+              <div class="form-group">
+                 <label>Anzahl:</label>
+                 <input type="text" class="form-control" name="Anzahl" required="1">
+              </div>
+               <div class="form-group">
+                 <label>Artikelnummer:</label>
+                 <input type="email" class="form-control" name="Artikelnummer" required="1">
+              </div>
+               <div class="form-group">
+                 <label>Bezeichnung:</label>
+                 <input type="number" class="form-control" name="Bezeichnung" required="0">
+              </div>
+              <div class="form-group">
+                 <button class="btn btn-primary" type="submit">Hinzufügen</button>
+              </div>
+           </form>
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+        </div>
+     </div>
+  </div>
+</div>  
+                  <!-- Modal Edit Employee-->
+<div id="modaledit" class="modal fade" role="dialog">
+   <div class="modal-dialog"> 
+      <div class="modal-content"> 
+         <div class="modal-header"> 
+            <h4 class="modal-title">Update Information</h4> 
+         </div> 
+         <div class="modal-body"> 
+            <form action="{{url_for('update_kzb')}}" method="POST"> 
+               <div class="form-group"> 
+                  <label>Anzahl:</label>
+                   <input type="hidden"  name="id" value=""> 
+                  <input type="text" class="form-control" name="Anzahl" value=""> 
+               </div> 
+ 
+               <div class="form-group"> 
+                  <label>Artikelnummer:</label> 
+                  <input type="text" class="form-control" name="Artikelnummer" value=""> 
+               </div> 
+               <div class="form-group"> 
+                  <label>Beschreibung:</label> 
+                  <input type="text" class="form-control" name="Beschreibung" value=""> 
+               </div> 
+               <div class="form-group"> 
+                  <button class="btn btn-primary" type="submit">Update</button> 
+               </div> 
+            </form> 
+         </div> 
+         <div class="modal-footer"> 
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button> 
+         </div> 
+      </div> 
+   </div> 
+</div>
+  
+</body>
+{% endblock %}
