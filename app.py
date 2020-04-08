@@ -53,8 +53,8 @@ class ErsatzteileKonrad(db.Model):
  #   Bezeichnung = input(f"ErsatzteileAlchemy for '{ersatzteile_alchemy.Bezeichnung}': $")
  #   Artikelnummer = db.realtionship('ErsatzteileAlchemy'), Column (Integer(), ForeignKey) 
     Bezeichnung = Column(Integer(), primary_key=False)
-    Ablaufdatum = Column (Integer(), primary_key=False, nullable=True)
-    Lot = Column (Integer(), primary_key=False, nullable=True)
+    Ablaufdatum = Column (String(), primary_key=False, nullable=True)
+    Lot = Column (String(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
 
@@ -76,32 +76,29 @@ class ErsatzteileKonrad(db.Model):
 
 #   ErsatzteileAlchemy_Bezeichnung = db.Column(Integer(), ForeignKey(ErsatzteileAlchemy.Bezeichnung))
 
-@app.route('/kzb/update', methods = ['Get','POST'])
-def update_kzb():
-    if request.method == 'POST':
-        ersatzteile_konrad = (request.form['Anzahl'], request.form['Artikelnummer'], request.form['Bezeichnung'], request.form['Ablaufdatum'],
-                request.form['Lot'], request.form['Details'], request.form['Geraet'])
-
-        #Anzahl = request.form['Anzahl']
-        #Artikelnummer = request.form['Artikelnummer']
-        #Bezeichnung = request.form['Bezeichnung']
-        #Ablaufdatum = request.form['Ablaufdatum']
-        #Lot = request.form['Lot']
-        #Details = request.form['Details']
-        #Geraet = request.form['Geraet']
-
-        db.session.add(ersatzteile_konrad)
-        db.session.commit()
-        flash('Record was successfully added')
-        return redirect(url_for('update_kzb.html'))
-
-    return render_template('update_kzb.html', title = 'update.kzb')
-
 @app.route('/kzb', methods = ['Get','POST'])
-def ersatzteile_kzb():
+def insert_kzb():
     ersatzteile_konrad = ErsatzteileKonrad.query.all()
 
+    if request.method == 'POST':
+        Anzahl = request.form['Anzahl']
+        Artikelnummer = request.form['Artikelnummer']
+        Bezeichnung = request.form['Bezeichnung']
+        Lot = request.form['Lot']
+        Ablaufdatum = request.form['Ablaufdatum']
+        Details = request.form['Details']
+        Geraet = request.form['Geraet']
+
+        Neue_ErsatzteileKonrad = ErsatzteileKonrad (Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+        db.session.add(Neue_ErsatzteileKonrad)
+        db.session.commit() 
+        #flash('Record was successfully added')
+        return redirect(url_for('kzb'))
+
     return render_template('kzb.html', ersatzteile_konrad = ersatzteile_konrad, title = 'kzb')
+
+    #    ersatzteile-konrad = Anzahl = request.form['Anzahl'], request.form['Artikelnummer'], request.form['Bezeichnung'], request.form['Ablaufdatum'],
+    #            request.form['Lot'], request.form['Details'], request.form['Geraet']    
 
 
 @app.route('/ersatzteilliste')
