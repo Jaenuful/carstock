@@ -13,7 +13,7 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = 'Jan123'
 engine = create_engine('postgresql://postgres:root@localhost/carstock')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/carstock'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -52,18 +52,18 @@ class ErsatzteileKonrad(db.Model):
     Artikelnummer = Column (Integer(), primary_key=True) 
  #   Bezeichnung = input(f"ErsatzteileAlchemy for '{ersatzteile_alchemy.Bezeichnung}': $")
  #   Artikelnummer = db.realtionship('ErsatzteileAlchemy'), Column (Integer(), ForeignKey) 
-    Bezeichnung = Column(Integer(), primary_key=False)
+    Bezeichnung = Column(String(), primary_key=False)
+    Lot = Column (Integer(), primary_key=False, nullable=True)
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
-    Lot = Column (String(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
 
-    def __init__(self, Anzahl, Artikelnummer, Bezeichnung, Ablaufdatum, Lot, Details, Geraet):
+    def __init__(self, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
         self.Anzahl = Anzahl
         self.Artikelnummer = Artikelnummer
         self.Bezeichnung = Bezeichnung
-        self.Ablaufdatum = Ablaufdatum
         self.Lot = Lot
+        self.Ablaufdatum = Ablaufdatum
         self.Details = Details
         self.Geraet = Geraet
 
@@ -78,8 +78,6 @@ class ErsatzteileKonrad(db.Model):
 
 @app.route('/kzb', methods = ['Get','POST'])
 def insert_kzb():
-    ersatzteile_konrad = ErsatzteileKonrad.query.all()
-
     if request.method == 'POST':
         Anzahl = request.form['Anzahl']
         Artikelnummer = request.form['Artikelnummer']
@@ -93,13 +91,14 @@ def insert_kzb():
         db.session.add(Neue_ErsatzteileKonrad)
         db.session.commit() 
         #flash('Record was successfully added')
-        return redirect(url_for('kzb'))
+        return redirect(url_for('insert_kzb'))
+    
+    ersatzteile_konrad = ErsatzteileKonrad.query.all()
 
     return render_template('kzb.html', ersatzteile_konrad = ersatzteile_konrad, title = 'kzb')
 
     #    ersatzteile-konrad = Anzahl = request.form['Anzahl'], request.form['Artikelnummer'], request.form['Bezeichnung'], request.form['Ablaufdatum'],
-    #            request.form['Lot'], request.form['Details'], request.form['Geraet']    
-
+    #            request.form['Lot'], request.form['Details'], request.form['Geraet']
 
 @app.route('/ersatzteilliste')
 def ersatzteilliste():
