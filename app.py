@@ -19,24 +19,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/ca
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-#Base = declarative_base()   
-#Session = sessionmaker()
-#metadata = MetaData()
-
-#    def __init__(self, Artikelnummer, Bezeichnung, Details, Geraet):
-#        self.Artikelnummer = Artikelnummer
-#        self.Bezeichnung = Bezeichnung
-#        self.Details = Details
-#        self.Geraet = Geraet
-
-#    def __repr__(self):
- #       return "Artikelnummer{}, Bezeichnung={}, Details={}, Gerät={}"\
-  #              .format(self.Artikelnummer, self.Bezeichnung, self.Details, self.Geraet)
-        #return '<%r>' % self.Bezeichnung
-        #return 'self.Artikelnummer'
-#db.create_all()
-#db.session.commit()
-#print(ErsatzteileAlchemy)
 
 class ErsatzteileAlchemy(db.Model):
     __tablename__ = 'ersatzteile_alchemy'
@@ -48,12 +30,12 @@ class ErsatzteileAlchemy(db.Model):
 
 class ErsatzteileKonrad(db.Model):
     __tablename__ = 'ersatzteile_konrad'
-    Anzahl = Column(Integer(), primary_key = True)
+    Anzahl = Column(Integer(), primary_key = False, nullable=False)
     Artikelnummer = Column (Integer(), primary_key=True) 
  #   Bezeichnung = input(f"ErsatzteileAlchemy for '{ersatzteile_alchemy.Bezeichnung}': $")
  #   Artikelnummer = db.realtionship('ErsatzteileAlchemy'), Column (Integer(), ForeignKey) 
-    Bezeichnung = Column(String(), primary_key=False)
-    Lot = Column (Integer(), primary_key=False, nullable=True)
+    Bezeichnung = Column(String(), primary_key=False, unique=False)
+    Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
@@ -77,6 +59,11 @@ class ErsatzteileKonrad(db.Model):
 #   ErsatzteileAlchemy_Bezeichnung = db.Column(Integer(), ForeignKey(ErsatzteileAlchemy.Bezeichnung))
 
 @app.route('/kzb', methods = ['Get','POST'])
+def kzb():
+    ersatzteile_konrad = ErsatzteileKonrad.query.all()
+    return render_template('kzb.html', ersatzteile_konrad = ersatzteile_konrad, title = 'kzb')
+
+@app.route('/kzb-insert', methods = ['POST'])
 def insert_kzb():
     if request.method == 'POST':
         Anzahl = request.form['Anzahl']
@@ -87,15 +74,35 @@ def insert_kzb():
         Details = request.form['Details']
         Geraet = request.form['Geraet']
 
+        if Lot == '':
+            Lot = None
+
         Neue_ErsatzteileKonrad = ErsatzteileKonrad (Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileKonrad)
         db.session.commit() 
-        #flash('Record was successfully added')
-        return redirect(url_for('insert_kzb'))
+        flash('Eintrag Erfolgreich')
+        return redirect(url_for('kzb'))
     
-    ersatzteile_konrad = ErsatzteileKonrad.query.all()
 
-    return render_template('kzb.html', ersatzteile_konrad = ersatzteile_konrad, title = 'kzb')
+@app.route('/kzb-update', methods = ['GET','POST'])   
+def update_kzb():
+    if request.method == 'POST':
+        Update_ErsatzteileKonrad = ErsatzteileKonrad.query.get(request.form.get('Artikelnummer'))
+
+        Update_ErsatzteileKonrad.Anzahl = request.form['Anzahl']
+        Update_ErsatzteileKonrad.Bezeichnung = request.form['Bezeichnung']
+        Update_ErsatzteileKonrad.Lot = request.form['Lot']
+        Update_ErsatzteileKonrad.Ablaufdatum = request.form['Ablaufdatum']
+        Update_ErsatzteileKonrad.Details = request.form['Details']
+        Update_ErsatzteileKonrad.Geraet = request.form['Geraet']
+
+        if Update_ErsatzteileKonrad.Lot == '':
+            Update_ErsatzteileKonrad.Lot = None
+
+        db.session.commit()
+        flash("Update Erfolgreich")
+
+        return redirect(url_for('kzb'))
 
     #    ersatzteile-konrad = Anzahl = request.form['Anzahl'], request.form['Artikelnummer'], request.form['Bezeichnung'], request.form['Ablaufdatum'],
     #            request.form['Lot'], request.form['Details'], request.form['Geraet']
