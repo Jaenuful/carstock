@@ -104,8 +104,14 @@ def update_kzb():
 
         return redirect(url_for('kzb'))
 
-    #    ersatzteile-konrad = Anzahl = request.form['Anzahl'], request.form['Artikelnummer'], request.form['Bezeichnung'], request.form['Ablaufdatum'],
-    #            request.form['Lot'], request.form['Details'], request.form['Geraet']
+@app.route('/kzb-delete/<Artikelnummer>/', methods = ['GET', 'POST'])
+def delete_kzb(Artikelnummer):
+    Delete_ErsatzteileKonrad = ErsatzteileKonrad.query.get(Artikelnummer)
+    db.session.delete(Delete_ErsatzteileKonrad)
+    db.session.commit()
+    flash("Eintrag erfolgreich gelöscht")
+
+    return redirect(url_for('kzb'))
 
 @app.route('/ersatzteilliste')
 def ersatzteilliste():

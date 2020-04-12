@@ -1,29 +1,30 @@
 {% extends 'layout.html' %}
-{% block content %} 
-  <body>
-    <div class="modal-body">
+{% block content %}
+
+<body>
+  <div class="modal-body">
     <div class="mt-6">
-        <table id="proxies" class="display table nowrap responsive" style="width: 100%">
-            <thead class="thead-dark">
-              <tr>
-                <th>Ref
-                <th>Bezeichnung
-                <th>Details
-                <th>Gerät
-            </thead>
-              <tbody>
-              {% for Ersatzteile in Ersatzteile %}
-              <tr>
-                <td>{{Ersatzteile.Artikelnummer}}
-                <td>{{Ersatzteile.Bezeichnung}}
-                <td>{{Ersatzteile.Details}}
-                <td>{{Ersatzteile.Geraet}}
-              </tr>
-                    {% endfor %}
-              </tbody>
-          </table>          
-        </div>
-      </div>
+      <table id="proxies" class="display table nowrap responsive" style="width: 100%">
+        <thead class="thead-dark">
+          <tr>
+            <th>Ref
+            <th>Bezeichnung
+            <th>Details
+            <th>Gerät
+        </thead>
+        <tbody>
+          {% for Ersatzteile in Ersatzteile %}
+          <tr>
+            <td>{{Ersatzteile.Artikelnummer}}
+            <td>{{Ersatzteile.Bezeichnung}}
+            <td>{{Ersatzteile.Details}}
+            <td>{{Ersatzteile.Geraet}}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-  </body>
+  </div>
+  </div>
+</body>
 {% endblock %}
