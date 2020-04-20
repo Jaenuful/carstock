@@ -11,6 +11,7 @@
             <th>Bezeichnung
             <th>Details
             <th>Gerät
+            <th>Bearbeiten
         </thead>
         <tbody>
           {% for Ersatzteile in Ersatzteile %}
@@ -19,12 +20,15 @@
             <td>{{Ersatzteile.Bezeichnung}}
             <td>{{Ersatzteile.Details}}
             <td>{{Ersatzteile.Geraet}}
+            <td><a href="/liste-delete/{{Ersatzteile.ID}}" class="btn btn-outline-danger btn-xs float-sm-right"
+                onclick="return confirm('Are You Sure To Delete ?')">X</a>
           </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
     </div>
   </div>
   </div>
+  {% endfor %}
+  </tbody>
+  </table>
 </body>
 {% endblock %}

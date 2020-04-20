@@ -3,7 +3,25 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button type="button" class="btn btn-primary float-sm-left class=" nav-link href="/carstock">Technikerlager</button>
+    <a class="navbar-brand" href="/carstock">Techniker:</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTechniker"
+      aria-controls="navbarTechniker" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTechniker">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/kzb">Konrad Zbinden</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/aka">Alexander Kauer<span class="sr-only">(current)</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/jwi">Jan Willimann</a>
+        </li>
+      </ul>
+    </div>
   </nav>
 
   <!-- Flash Message-->
@@ -11,8 +29,7 @@
   {% if messages %}
   {% for message in messages %}
   <div class="alert alert-success alert-dismissable" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="close"><span
-        aria-hidden="true">x</span></button>
+    <button type="button" class="close" data-dismiss="alert" aria-label="close"><span aria-hidden="true">x</span></button>
     {{message}}
   </div>
   {% endfor %}
@@ -24,11 +41,10 @@
     <div class="mx-auto">
       <button type="button" class="btn btn-success float-sm-right" data-toggle="modal" data-target="#mymodal">Neuer
         Eintrag</button>
-
+  
       <table id="proxies" class="display table nowrap responsive" style="width: 100%">
         <thead class="thead-dark">
           <tr>
-            <th>Techniker
             <th>Anzahl
             <th>Ref
             <th>Bezeichnung
@@ -39,21 +55,21 @@
             <th>Bearbeiten
         </thead>
         <tbody>
-          {% for ersatzteile_eingang in ersatzteile_eingang %}
+          {% for ersatzteile_alex in ersatzteile_alex %}
           <tr>
-            <td>{{ersatzteile_eingang.Anzahl}}
-            <td>{{ersatzteile_eingang.Artikelnummer}}
-            <td>{{ersatzteile_eingang.Bezeichnung}}
-            <td>{{ersatzteile_eingang.Lot}}
-            <td>{{ersatzteile_eingang.Ablaufdatum}}
-            <td>{{ersatzteile_eingang.Details}}
-            <td>{{ersatzteile_eingang.Geraet}}
+            <td>{{ersatzteile_alex.Anzahl}}
+            <td>{{ersatzteile_alex.Artikelnummer}}
+            <td>{{ersatzteile_alex.Bezeichnung}}
+            <td>{{ersatzteile_alex.Lot}}
+            <td>{{ersatzteile_alex.Ablaufdatum}}
+            <td>{{ersatzteile_alex.Details}}
+            <td>{{ersatzteile_alex.Geraet}}
             <td>
               <div class="btn-group float-sm-right" role="group">
-                <a href="/update_ersatzteile/{{ersatzteile_eingang.Artikelnummer}}"
+                <a href="/update_kzb/{{ersatzteile_alex.Artikelnummer}}"
                   class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
-                  data-target="#modaledit{{ersatzteile_eingang.Artikelnummer}}">Edit</a>
-                <a href="/ersatzteile-delete/{{ersatzteile_eingang.Artikelnummer}}"
+                  data-target="#modaledit{{ersatzteile_alex.Artikelnummer}}">Edit</a>
+                <a href="/kzb-delete/{{ersatzteile_alex.Artikelnummer}}"
                   class="btn btn-outline-danger btn-xs float-sm-right"
                   onclick="return confirm('Are You Sure To Delete ?')">X</a>
               </div>
@@ -61,45 +77,40 @@
     </div>
 
     <!-- Modal Edit Employee-->
-    <div id="modaledit{{ ersatzteile_eingang.Artikelnummer }}" class="modal fade" role="dialog">
+    <div id="modaledit{{ ersatzteile_alex.Artikelnummer }}" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Update Ref Nummer: {{ersatzteile_eingang.Artikelnummer}}</h4>
+            <h4 class="modal-title">Update Ref Nummer: {{ersatzteile_alex.Artikelnummer}}</h4>
           </div>
 
           <div class="modal-body">
-            <form action="{{url_for('update_eingang')}}" method="POST">
-              <div class="form-group">
-                <label>Techniker</label>
-                <input type="hidden" name="Techniker" value="{{ersatzteile_eingang.Techniker}}">
-                <input type="number" class="form-control" name="Techniker" value="{{ersatzteile_eingang.Techniker}}">
-              </div>
+            <form action="{{url_for('update_aka')}}" method="POST">
               <div class="form-group">
                 <label>Anzahl</label>
-                <input type="hidden" name="Artikelnummer" value="{{ersatzteile_eingang.Artikelnummer}}">
-                <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_eingang.Anzahl}}">
+                <input type="hidden" name="Artikelnummer" value="{{ersatzteile_alex.Artikelnummer}}">
+                <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_alex.Anzahl}}">
               </div>
 
               <div class="form-group">
                 <label>Bezeichnung</label>
-                <input type="text" class="form-control" name="Bezeichnung" value="{{ersatzteile_eingang.Bezeichnung}}">
+                <input type="text" class="form-control" name="Bezeichnung" value="{{ersatzteile_alex.Bezeichnung}}">
               </div>
               <div class="form-group">
                 <label>Lot</label>
-                <input type="number" class="form-control" name="Lot" value="{{ersatzteile_eingang.Lot}}">
+                <input type="number" class="form-control" name="Lot" value="{{ersatzteile_alex.Lot}}">
               </div>
               <div class="form-group">
                 <label>Ablaufdatum</label>
-                <input type="date" class="form-control" name="Ablaufdatum" value="{{ersatzteile_eingang.Ablaufdatum}}">
+                <input type="date" class="form-control" name="Ablaufdatum" value="{{ersatzteile_alex.Ablaufdatum}}">
               </div>
               <div class="form-group">
                 <label>Details</label>
-                <input type="text" class="form-control" name="Details" value="{{ersatzteile_eingang.Details}}">
+                <input type="text" class="form-control" name="Details" value="{{ersatzteile_alex.Details}}">
               </div>
               <div class="form-group">
                 <label>Gerät</label>
-                <input type="text" class="form-control" name="Geraet" value="{{ersatzteile_eingang.Geraet}}">
+                <input type="text" class="form-control" name="Geraet" value="{{ersatzteile_alex.Geraet}}">
               </div>
 
               <div class="form-group">
@@ -123,13 +134,9 @@
           <div class="modal-header">
             <h4 class="modal-title">Ersatzteil hinzufügen</h4>
           </div>
-
+    
           <div class="modal-body">
-            <form action="{{url_for('insert_eingang')}}" method="POST">
-              <div class="form-group">
-                <label>Techniker</label>
-                <input type="text" class="form-control" name="Techniker" required="1">
-              </div>
+            <form action="{{url_for('insert_aka')}}" method="POST">
               <div class="form-group">
                 <label>Anzahl</label>
                 <input type="number" class="form-control" name="Anzahl" required="1">
@@ -158,7 +165,7 @@
                 <label>Gerät</label>
                 <input type="text" class="form-control" name="Geraet">
               </div>
-
+    
               <div class="form-group">
                 <button class="btn btn-primary" type="submit">Hinzufügen</button>
               </div>
@@ -171,5 +178,5 @@
       </div>
     </div>
     </tbody>
-</body>
-{% endblock %}
+    </body>
+    {% endblock %}
