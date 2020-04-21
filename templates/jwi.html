@@ -14,20 +14,19 @@
         <li class="nav-item">
           <a class="nav-link" href="/kzb">Konrad Zbinden</a>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/aka">Alexander Kauer<span class="sr-only">(current)</a>
-        </li>
         <li class="nav-item">
-          <a class="nav-link" href="/jwi">Jan Willimann</a>
+          <a class="nav-link" href="/aka">Alexander Kauer</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/jwi">Jan Willimann<span class="sr-only">(current)</a>
         </li>
       </ul>
     </div>
   </nav>
+
   <div class="modal-body">
     <div class="mx-auto">
-      <button type="button" class="btn btn-success float-sm-right" data-toggle="modal" data-target="#mymodal">Neuer
-        Eintrag</button>
-  
+
       <table id="proxies" class="display table nowrap responsive" style="width: 100%">
         <thead class="thead-dark">
           <tr>
@@ -38,10 +37,9 @@
             <th>Ablaufdatum
             <th>Details
             <th>Gerät
-            <th>Bearbeiten
         </thead>
         <tbody>
-          {% for ersatzteile_eingang in ersatzteile_aka %}
+          {% for ersatzteile_eingang in ersatzteile_jwi %}
           <tr>
             <td>{{ersatzteile_eingang.Anzahl}}
             <td>{{ersatzteile_eingang.Artikelnummer}}
@@ -51,10 +49,10 @@
             <td>{{ersatzteile_eingang.Details}}
             <td>{{ersatzteile_eingang.Geraet}}
           </tr>
-          </div>
-          {% endfor %}
-          </table>
-        </div>
-        </tbody>
-      </body>
-      {% endblock %}
+    </div>
+    {% endfor %}
+    </table>
+  </div>
+  </tbody>
+</body>
+{% endblock %}

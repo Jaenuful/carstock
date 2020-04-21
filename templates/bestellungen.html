@@ -1,33 +1,179 @@
 {% extends 'layout.html' %}
-{% block content %} 
-  <body>
-    <div class="mt-4">
-        <table id="proxies" class="display table nowrap responsive" style="width: 100%">
-            <thead class="thead-dark">
-                <tr>
-                  <th>Techniker
-                  <th>Ref
-                  <th>Bezeichnung
-                  <th>Anzahl
-                  <th>Bestellt am
-                  <th>Erhalten am
-              </thead>
-                <tbody>
-                
-                <tr>
-                  <td>JWI
-                  <td>24453
-                  <td>pH - Sensor
-                  <td>2
-                  <td>24.02.2020
-                  <td>02.03.2020  
-                </tr>
-                    
-                </tbody>
-            </table>
-          
+{% block content %}
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/carstock">Techniker:</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTechniker"
+      aria-controls="navbarTechniker" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTechniker">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/kzb">Konrad Zbinden <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/aka">Alexander Kauer</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/jwi">Jan Willimann</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Flash Message-->
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissable" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="close"><span
+        aria-hidden="true">x</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+
+  <div class="modal-body">
+    <div class="mx-auto">
+      <button type="button" class="btn btn-success float-sm-right" data-toggle="modal" data-target="#mymodal">Neuer
+        Eintrag</button>
+
+      <table id="proxies" class="display table nowrap responsive" style="width: 100%">
+        <thead class="thead-dark">
+          <tr>
+            <th>Bestelldatum
+            <th>Anzahl
+            <th>Ref
+            <th>Bezeichnung
+            <th>Details
+            <th>Gerät
+            <th>Bearbeiten
+            <th>Erhalten am
+        </thead>
+        <tbody>
+          {% for ersatzteile_bestellungen in ersatzteile_bestellungen %}
+          <tr>
+            <td>{{ersatzteile_bestellungen.Bestelldatum}}
+            <td>{{ersatzteile_bestellungen.Anzahl}}
+            <td>{{ersatzteile_bestellungen.Artikelnummer}}
+            <td>{{ersatzteile_bestellungen.Bezeichnung}}
+            <td>{{ersatzteile_bestellungen.Details}}
+            <td>{{ersatzteile_bestellungen.Geraet}}
+            <td>{{ersatzteile_bestellungen.Erhalten_am}} 
+            <td>
+              <div class="btn-group float-sm-right" role="group">
+                <a href="/update_bestellungen/{{ersatzteile_bestellungen.Artikelnummer}}"
+                  class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
+                  data-target="#modaledit{{ersatzteile_konrad.Artikelnummer}}">Edit</a>
+                <a href="/kzb-delete/{{ersatzteile_bestellungen.Artikelnummer}}"
+                  class="btn btn-outline-danger btn-xs float-sm-right"
+                  onclick="return confirm('Are You Sure To Delete ?')">X</a>
+              </div>
+          </tr>
+    </div>
+
+    <!-- Modal Edit Employee-->
+    <div id="modaledit{{ ersatzteile_bestellungen.Artikelnummer }}" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Update für Ref Nummer: {{ersatzteile_bestellungen.Artikelnummer}}</h4>
+          </div>
+
+          <div class="modal-body">
+            <form action="{{url_for('update_bestellungen')}}" method="POST">
+              <div class="form-group">
+                <label>Anzahl</label>
+                <input type="hidden" name="Artikelnummer" value="{{ersatzteile_bestellungen.Artikelnummer}}">
+                <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_bestellungen.Anzahl}}">
+              </div>
+              <div class="form-group">
+                <label>Bestelldatum</label>
+                <input type="date" class="form-control" name="Bestelldatum" value="{{ersatzteile_bestellungen.Bestelldatum}}">
+              </div>
+              <div class="form-group">
+                <label>Bezeichnung</label>
+                <input type="text" class="form-control" name="Bezeichnung" value="{{ersatzteile_bestellungen.Bezeichnung}}">
+              </div>
+              <div class="form-group">
+                <label>Details</label>
+                <input type="text" class="form-control" name="Details" value="{{ersatzteile_bestellungen.Details}}">
+              </div>
+              <div class="form-group">
+                <label>Gerät</label>
+                <input type="text" class="form-control" name="Geraet" value="{{ersatzteile_bestellungen.Geraet}}">
+              </div>
+              <div class="form-group">
+                <label>Erhalten am</label>
+                <input type="date" class="form-control" name="Erhalten_am" value="{{ersatzteile_bestellungen.Erhalten_am}}">
+              </div>
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit">Update</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+          </div>
         </div>
       </div>
     </div>
-  </body>
+    {% endfor %}
+    </table>
+
+    <!-- Modal Ersatzteil hinzufügen-->
+    <div id="mymodal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Ersatzteil hinzufügen</h4>
+          </div>
+          <div class="form-group">
+            <label>Bestelldatum</label>
+            <input type="date" class="form-control" name="Bestelldatum">
+          </div>
+          <div class="modal-body">
+            <form action="{{url_for('insert_bestellungen')}}" method="POST">
+              <div class="form-group">
+                <label>Anzahl</label>
+                <input type="number" class="form-control" name="Anzahl" required="1">
+              </div>
+              <div class="form-group">
+                <label>Artikelnummer</label>
+                <input type="number" class="form-control" name="Artikelnummer" required="1">
+              </div>
+              <div class="form-group">
+                <label>Bezeichnung</label>
+                <input type="text" class="form-control" name="Bezeichnung">
+              </div>  
+              <div class="form-group">
+                <label>Details</label>
+                <input type="text" class="form-control" name="Details">
+              </div>
+              <div class="form-group">
+                <label>Gerät</label>
+                <input type="text" class="form-control" name="Geraet">
+              </div>
+              <label>Erhalten am</label>
+              <input type="date" class="form-control" name="Erhalten_am">
+            </div>
+
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit">Hinzufügen</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </tbody>
+</body>
 {% endblock %}

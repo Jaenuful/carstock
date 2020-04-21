@@ -35,6 +35,7 @@
         <thead class="thead-dark">
           <tr>
             <th>Techniker
+            <th>Datum
             <th>Anzahl
             <th>Ref
             <th>Bezeichnung
@@ -47,6 +48,8 @@
         <tbody>
           {% for ersatzteile_eingang in ersatzteile_eingang %}
           <tr>
+            <td>{{ersatzteile_eingang.Techniker}}
+            <td>{{ersatzteile_eingang.Datum}}
             <td>{{ersatzteile_eingang.Anzahl}}
             <td>{{ersatzteile_eingang.Artikelnummer}}
             <td>{{ersatzteile_eingang.Bezeichnung}}
@@ -79,7 +82,11 @@
               <div class="form-group">
                 <label>Techniker</label>
                 <input type="hidden" name="Techniker" value="{{ersatzteile_eingang.Techniker}}">
-                <input type="number" class="form-control" name="Techniker" value="{{ersatzteile_eingang.Techniker}}">
+                <input type="text" class="form-control" name="Techniker" value="{{ersatzteile_eingang.Techniker}}">
+              </div>
+              <div class="form-group">
+                <label>Datum</label>
+                <input type="date" class="form-control" name="Datum" value="{{ersatzteile_eingang.Datum}}">
               </div>
               <div class="form-group">
                 <label>Anzahl</label>
@@ -135,6 +142,10 @@
               <div class="form-group">
                 <label>Techniker</label>
                 <input type="text" class="form-control" name="Techniker" required="1">
+              </div>
+              <div class="form-group">
+                <label>Datum Eingang</label>
+                <input type="date" class="form-control" name="Datum">
               </div>
               <div class="form-group">
                 <label>Anzahl</label>
