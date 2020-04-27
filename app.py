@@ -43,6 +43,15 @@ class ErsatzteileTechniker(db.Model):
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
+    def __init__(self, Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
+        self.Techniker = Techniker
+        self.Anzahl = Anzahl
+        self.Artikelnummer = Artikelnummer
+        self.Bezeichnung = Bezeichnung
+        self.Lot = Lot
+        self.Ablaufdatum = Ablaufdatum
+        self.Details = Details
+        self.Geraet = Geraet   
 
 class ErsatzteileEingang(db.Model):
     __tablename__ = 'ersatzteile_eingang'
@@ -74,27 +83,32 @@ class ErsatzteileAusgang(db.Model):
     Artikelnummer = Column (Integer(), primary_key=True) 
     Bezeichnung = Column(String(), primary_key=False, unique=False)
     Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
-    def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot):
+    Kunde = Column (String(), primary_key=False, unique=False, nullable=True)
+    SMR = Column(Integer(), primary_key = False,unique=False, nullable=True)
+    def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR):
         self.Techniker = Techniker
         self.Datum = Datum
         self.Anzahl = Anzahl
         self.Artikelnummer = Artikelnummer
         self.Bezeichnung = Bezeichnung
         self.Lot = Lot
+        self.Kunde = Kunde
+        self.SMR = SMR
 
 class ErsatzteileBestellungen(db.Model):
     __tablename__ = 'ersatzteile_bestellungen'
+    Techniker = Column(String(), nullable=False, unique=False)
     Bestelldatum = Column(String(), nullable=True, unique=False)
-    Techniker = Column(String(), nullable=False)
     Anzahl = Column(Integer(), primary_key = False, nullable=False)
     Artikelnummer = Column (Integer(), primary_key=True) 
     Bezeichnung = Column(String(), primary_key=False, unique=False)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
     Erhalten_am = Column(String(), nullable=True, unique=False)
-    def __init__(self, Bestelldatum, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am):
-        self.Bestelldatum = Bestelldatum
+
+    def __init__(self, Techniker, Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am):
         self.Techniker = Techniker
+        self.Bestelldatum = Bestelldatum
         self.Anzahl = Anzahl
         self.Artikelnummer = Artikelnummer
         self.Bezeichnung = Bezeichnung  
@@ -106,8 +120,6 @@ class ErsatzteileKonrad(db.Model):
     __tablename__ = 'ersatzteile_konrad'
     Anzahl = Column(Integer(), primary_key = False, nullable=False)
     Artikelnummer = Column (Integer(), primary_key=True) 
- #   Bezeichnung = input(f"ErsatzteileAlchemy for '{ersatzteile_alchemy.Bezeichnung}': $")
- #   Artikelnummer = db.realtionship('ErsatzteileAlchemy'), Column (Integer(), ForeignKey) 
     Bezeichnung = Column(String(), primary_key=False, unique=False)
     Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
@@ -123,9 +135,6 @@ class ErsatzteileKonrad(db.Model):
         self.Details = Details
         self.Geraet = Geraet
     
-
-#   ErsatzteileAlchemy_Bezeichnung = db.Column(Integer(), ForeignKey(ErsatzteileAlchemy.Bezeichnung))
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 #    if current_user.is_authenticated:
@@ -161,9 +170,11 @@ def insert_eingang():
 
         if Lot == '':
             Lot = None
-
+         
         Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
+        db.session.add(Neue_ErsatzteileTechniker)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('eingang'))  
@@ -192,11 +203,10 @@ def jwi():
     ersatzteile_jwi = ErsatzteileTechniker.query.filter_by(Techniker='JWI').all()
     return render_template('jwi.html', ersatzteile_jwi = ersatzteile_jwi, title = 'jwi')
 
-
 @app.route('/kzb', methods = ['Get','POST'])
 def kzb():
-    ersatzteile_konrad = ErsatzteileKonrad.query.all()
-    return render_template('kzb.html', ersatzteile_konrad = ersatzteile_konrad, title = 'kzb')
+    ersatzteile_kzb = ErsatzteileTechniker.query.filter_by(Techniker='KZB').all()
+    return render_template('kzb.html', ersatzteile_kzb = ersatzteile_kzb, title = 'kzb')
 
 @app.route('/kzb-insert', methods = ['POST'])
 def insert_kzb():
@@ -269,24 +279,23 @@ def techniker():
     ersatzteile_techniker = ErsatzteileTechniker.query.all()
     return render_template('carstock.html', ersatzteile_techniker = ersatzteile_techniker, title = 'Carstock-Techniker')
 
-
 @app.route('/bestellungen', methods = ['Get','POST'])
 def bestellungen():
     ersatzteile_bestellungen = ErsatzteileBestellungen.query.all()
     return render_template('bestellungen.html', ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
 
-
 @app.route('/bestellungen-insert', methods = ['POST'])
 def insert_bestellungen():
     if request.method == 'POST':
+        Techniker = request.form['Techniker']
         Bestelldatum = request.form['Bestelldatum']
         Anzahl = request.form['Anzahl']
         Artikelnummer = request.form['Artikelnummer']
         Bezeichnung = request.form['Bezeichnung']
         Details = request.form['Details']
         Geraet = request.form['Geraet']
-        Erhalten_am = request.form['Erhalten am']
-        Neue_Bestellungen = ErsatzteileBestellungen (Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am)
+        Erhalten_am = request.form['Erhalten_am']
+        Neue_Bestellungen = ErsatzteileBestellungen (Techniker, Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am)
         db.session.add(Neue_Bestellungen)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
@@ -296,7 +305,8 @@ def insert_bestellungen():
 def update_bestellungen():
     if request.method == 'POST':
         Update_Bestellungen = ErsatzteileBestellungen.query.get(request.form.get('Artikelnummer'))
-        Update_Bestellungen.Bestelldatum = request.form['Bestelldatum']
+        Update_Bestellungen.Techniker = request.form['Techniker']
+        Update_Bestellungen.Bestelldatum = request.form['Bestelldatum']      
         Update_Bestellungen.Anzahl = request.form['Anzahl']
         Update_Bestellungen.Bezeichnung = request.form['Bezeichnung']
         Update_Bestellungen.Details = request.form['Details']
@@ -306,7 +316,7 @@ def update_bestellungen():
         flash("Update Erfolgreich.")
         return redirect(url_for('bestellungen'))
 
-@app.route('/bestellungen-delete/<Artikelnummer>/', methods = ['GET', 'POST'])
+@app.route('/delete_bestellungen/<Artikelnummer>/', methods = ['GET', 'POST'])
 def delete_bestellungen(Artikelnummer):
     Delete_Bestellungen = ErsatzteileBestellungen.query.get(Artikelnummer)
     db.session.delete(Delete_Bestellungen)
@@ -328,11 +338,13 @@ def insert_ausgang():
         Artikelnummer = request.form['Artikelnummer']
         Bezeichnung = request.form['Bezeichnung']
         Lot = request.form['Lot']
+        Kunde = request.form['Kunde']
+        SMR = request.form['SMR']
 
         if Lot == '':
             Lot = None
 
-        Neue_ErsatzteileAusgang = ErsatzteileAusgang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot)
+        Neue_ErsatzteileAusgang = ErsatzteileAusgang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR)
         db.session.add(Neue_ErsatzteileAusgang)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
@@ -347,6 +359,8 @@ def update_ausgang():
         Update_ErsatzteileAusgang.Anzahl = request.form['Anzahl']
         Update_ErsatzteileAusgang.Bezeichnung = request.form['Bezeichnung']
         Update_ErsatzteileAusgang.Lot = request.form['Lot']
+        Update_ErsatzteileAusgang.Kunde = request.form['Kunde']
+        Update_ErsatzteileAusgang.SMR = request.form['SMR']
 
         if Update_ErsatzteileAusgang.Lot == '':
             Update_ErsatzteileAusgang.Lot = None

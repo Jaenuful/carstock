@@ -62,9 +62,6 @@
                 <a href="/update_ersatzteile/{{ersatzteile_eingang.Artikelnummer}}"
                   class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
                   data-target="#modaledit{{ersatzteile_eingang.Artikelnummer}}">Edit</a>
-                <a href="/ersatzteile-delete/{{ersatzteile_eingang.Artikelnummer}}"
-                  class="btn btn-outline-danger btn-xs float-sm-right"
-                  onclick="return confirm('Are You Sure To Delete ?')">X</a>
               </div>
           </tr>
     </div>
@@ -180,10 +177,11 @@
                 <button class="btn btn-primary" type="submit">Hinzufügen</button>
               </div>
             </form>
-          </div>
-          <div class="modal-footer">
+          
+              <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
-          </div>
+              </div>
+          </div>    
         </div>
       </div>
     </div>

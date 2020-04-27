@@ -41,18 +41,18 @@
             <th>Bearbeiten
         </thead>
         <tbody>
-          {% for ersatzteile_eingang in ersatzteile_aka %}
-          <tr>
-            <td>{{ersatzteile_eingang.Anzahl}}
-            <td>{{ersatzteile_eingang.Artikelnummer}}
-            <td>{{ersatzteile_eingang.Bezeichnung}}
-            <td>{{ersatzteile_eingang.Lot}}
-            <td>{{ersatzteile_eingang.Ablaufdatum}}
-            <td>{{ersatzteile_eingang.Details}}
-            <td>{{ersatzteile_eingang.Geraet}}
+          {% for ersatzteile_techniker in ersatzteile_aka %}
+          <tr>{{ersatzteile_techniker.Techniker}}
+            <td>{{ersatzteile_techniker.Anzahl}}
+            <td>{{ersatzteile_techniker.Artikelnummer}}
+            <td>{{ersatzteile_techniker.Bezeichnung}}
+            <td>{{ersatzteile_techniker.Lot}}
+            <td>{{ersatzteile_techniker.Ablaufdatum}}
+            <td>{{ersatzteile_techniker.Details}}
+            <td>{{ersatzteile_techniker.Geraet}}
           </tr>
-          </div>
-          {% endfor %}
+    </div>
+    {% endfor %}
           </table>
         </div>
         </tbody>

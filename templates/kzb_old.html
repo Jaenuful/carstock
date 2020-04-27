@@ -2,14 +2,34 @@
 {% block content %}
 
 <body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/carstock">Techniker:</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTechniker"
+      aria-controls="navbarTechniker" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTechniker">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/kzb">Konrad Zbinden <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/aka">Alexander Kauer</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/jwi">Jan Willimann</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
   <!-- Flash Message-->
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   {% for message in messages %}
   <div class="alert alert-success alert-dismissable" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="close"><span
-        aria-hidden="true">x</span></button>
+    <button type="button" class="close" data-dismiss="alert" aria-label="close"><span aria-hidden="true">x</span></button>
     {{message}}
   </div>
   {% endfor %}
@@ -21,38 +41,36 @@
     <div class="mx-auto">
       <button type="button" class="btn btn-success float-sm-right" data-toggle="modal" data-target="#mymodal">Neuer
         Eintrag</button>
-
+  
       <table id="proxies" class="display table nowrap responsive" style="width: 100%">
         <thead class="thead-dark">
           <tr>
-            <th>Techniker
-            <th>Bestelldatum
             <th>Anzahl
             <th>Ref
             <th>Bezeichnung
+            <th>Lot
+            <th>Ablaufdatum
             <th>Details
             <th>Gerät
-            <th>Erhalten am
             <th>Bearbeiten
         </thead>
         <tbody>
-          {% for ersatzteile_bestellungen in ersatzteile_bestellungen %}
+          {% for ersatzteile_konrad in ersatzteile_konrad %}
           <tr>
-            <td>{{ersatzteile_bestellungen.Techniker}}
-            <td>{{ersatzteile_bestellungen.Bestelldatum}}
-            <td>{{ersatzteile_bestellungen.Anzahl}}
-            <td>{{ersatzteile_bestellungen.Artikelnummer}}
-            <td>{{ersatzteile_bestellungen.Bezeichnung}}
-            <td>{{ersatzteile_bestellungen.Details}}
-            <td>{{ersatzteile_bestellungen.Geraet}}
-            <td>{{ersatzteile_bestellungen.Erhalten_am}}
+            <td>{{ersatzteile_konrad.Anzahl}}
+            <td>{{ersatzteile_konrad.Artikelnummer}}
+            <td>{{ersatzteile_konrad.Bezeichnung}}
+            <td>{{ersatzteile_konrad.Lot}}
+            <td>{{ersatzteile_konrad.Ablaufdatum}}
+            <td>{{ersatzteile_konrad.Details}}
+            <td>{{ersatzteile_konrad.Geraet}}
             <td>
               <div class="btn-group float-sm-right" role="group">
-                <a href="/update_bestellungen/{{ersatzteile_bestellungen.Artikelnummer}}"
+                <a href="/update_kzb/{{ersatzteile_konrad.Artikelnummer}}"
                   class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
-                  data-target="#modaledit{{ersatzteile_bestellungen.Artikelnummer}}">Edit</a>
+                  data-target="#modaledit{{ersatzteile_konrad.Artikelnummer}}">Edit</a>
                   
-                <a href="/delete_bestellungen/{{ersatzteile_bestellungen.Artikelnummer}}"
+                <a href="/kzb-delete/{{ersatzteile_konrad.Artikelnummer}}"
                   class="btn btn-outline-danger btn-xs float-sm-right"
                   onclick="return confirm('Are You Sure To Delete ?')">X</a>
               </div>
@@ -60,51 +78,42 @@
     </div>
 
     <!-- Modal Edit Employee-->
-    <div id="modaledit{{ ersatzteile_bestellungen.Artikelnummer }}" class="modal fade" role="dialog">
+    <div id="modaledit{{ ersatzteile_konrad.Artikelnummer }}" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Update für Ref Nummer: {{ersatzteile_bestellungen.Artikelnummer}}</h4>
+            <h4 class="modal-title">Update Ref Nummer: {{ersatzteile_konrad.Artikelnummer}}</h4>
           </div>
 
           <div class="modal-body">
-            <form action="{{url_for('update_bestellungen')}}" method="POST">
-              <div class="form-group">
-                <label>Techniker</label>
-                <input type="hidden" name="Techniker" value="{{ersatzteile_bestellungen.Techniker}}">
-                <input type="text" class="form-control" name="Techniker" value="{{ersatzteile_bestellungen.Techniker}}">
-              </div>
-
-              <div class="form-group">
-                <label>Bestelldatum</label>
-                <input type="date" class="form-control" name="Bestelldatum"
-                  value="{{ersatzteile_bestellungen.Bestelldatum}}">
-              </div>
-
+            <form action="{{url_for('update_kzb')}}" method="POST">
               <div class="form-group">
                 <label>Anzahl</label>
-                <input type="hidden" name="Artikelnummer" value="{{ersatzteile_bestellungen.Anzahl}}">
-                <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_bestellungen.Anzahl}}">
+                <input type="hidden" name="Artikelnummer" value="{{ersatzteile_konrad.Artikelnummer}}">
+                <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_konrad.Anzahl}}">
               </div>
 
               <div class="form-group">
                 <label>Bezeichnung</label>
-                <input type="text" class="form-control" name="Bezeichnung"
-                  value="{{ersatzteile_bestellungen.Bezeichnung}}">
+                <input type="text" class="form-control" name="Bezeichnung" value="{{ersatzteile_konrad.Bezeichnung}}">
+              </div>
+              <div class="form-group">
+                <label>Lot</label>
+                <input type="number" class="form-control" name="Lot" value="{{ersatzteile_konrad.Lot}}">
+              </div>
+              <div class="form-group">
+                <label>Ablaufdatum</label>
+                <input type="date" class="form-control" name="Ablaufdatum" value="{{ersatzteile_konrad.Ablaufdatum}}">
               </div>
               <div class="form-group">
                 <label>Details</label>
-                <input type="text" class="form-control" name="Details" value="{{ersatzteile_bestellungen.Details}}">
+                <input type="text" class="form-control" name="Details" value="{{ersatzteile_konrad.Details}}">
               </div>
               <div class="form-group">
                 <label>Gerät</label>
-                <input type="text" class="form-control" name="Geraet" value="{{ersatzteile_bestellungen.Geraet}}">
+                <input type="text" class="form-control" name="Geraet" value="{{ersatzteile_konrad.Geraet}}">
               </div>
-              <div class="form-group">
-                <label>Erhalten am</label>
-                <input type="date" class="form-control" name="Erhalten_am"
-                  value="{{ersatzteile_bestellungen.Erhalten_am}}">
-              </div>
+
               <div class="form-group">
                 <button class="btn btn-primary" type="submit">Update</button>
               </div>
@@ -126,33 +135,29 @@
           <div class="modal-header">
             <h4 class="modal-title">Ersatzteil hinzufügen</h4>
           </div>
-
+    
+          <div class="form-group">
+            <label>Anzahl</label>
+            <input type="number" class="form-control" name="Anzahl" required="1">
+          </div>
           <div class="modal-body">
-            <form action="{{url_for('insert_bestellungen')}}" method="POST">
-
-              <div class="form-group">
-                <label>Techniker</label>
-                <input type="text" class="form-control" name="Techniker" required="1">
-              </div>
-
-              <div class="form-group">
-                <label>Bestelldatum</label>
-                <input type="date" class="form-control" name="Bestelldatum">
-              </div>
-
-              <div class="form-group">
-                <label>Anzahl</label>
-                <input type="number" class="form-control" name="Anzahl" required="1">
-              </div>
+            <form action="{{url_for('insert_kzb')}}" method="POST">
 
               <div class="form-group">
                 <label>Artikelnummer</label>
                 <input type="number" class="form-control" name="Artikelnummer" required="1">
               </div>
-
               <div class="form-group">
                 <label>Bezeichnung</label>
                 <input type="text" class="form-control" name="Bezeichnung">
+              </div>
+              <div class="form-group">
+                <label>Lot</label>
+                <input type="number" class="form-control" name="Lot">
+              </div>
+              <div class="form-group">
+                <label>Ablaufdatum</label>
+                <input type="date" class="form-control" name="Ablaufdatum">
               </div>
               <div class="form-group">
                 <label>Details</label>
@@ -162,11 +167,7 @@
                 <label>Gerät</label>
                 <input type="text" class="form-control" name="Geraet">
               </div>
-            <div class="form-group">
-              <label>Erhalten am</label>
-              <input type="date" class="form-control" name="Erhalten_am">
-            </div>
-
+    
               <div class="form-group">
                 <button class="btn btn-primary" type="submit">Hinzufügen</button>
               </div>
@@ -178,7 +179,6 @@
         </div>
       </div>
     </div>
-  </div>
-  </tbody>
-</body>
-{% endblock %}
+    </tbody>
+    </body>
+    {% endblock %}
