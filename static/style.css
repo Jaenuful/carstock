@@ -1,11 +1,11 @@
 body {
-    background: #fffefe;
+    background: #fffefef6;
     color: #333333;
     margin-top: 5rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #444444;
+    color: #383838;
 }
 
 header {
@@ -20,7 +20,7 @@ section {
 }
 
 footer {
-    background: #1487aa;
+    background: #087bdab0;
     padding:    20px
 }
 

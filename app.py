@@ -36,14 +36,13 @@ class ErsatzteileTechniker(db.Model):
     Techniker = Column(String(), nullable=False)
     Anzahl = Column(Integer(), primary_key = False, nullable=False)
     Artikelnummer = Column (Integer(), primary_key=True) 
- #   Bezeichnung = input(f"ErsatzteileAlchemy for '{ersatzteile_alchemy.Bezeichnung}': $")
- #   Artikelnummer = db.realtionship('ErsatzteileAlchemy'), Column (Integer(), ForeignKey) 
     Bezeichnung = Column(String(), primary_key=False, unique=False)
     Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
-    def __init__(self, Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
+    ID = Column(Integer(), primary_key=True)
+    def __init__(self, Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, ID):
         self.Techniker = Techniker
         self.Anzahl = Anzahl
         self.Artikelnummer = Artikelnummer
@@ -51,20 +50,22 @@ class ErsatzteileTechniker(db.Model):
         self.Lot = Lot
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
-        self.Geraet = Geraet   
+        self.Geraet = Geraet 
+        self.ID = ID
 
 class ErsatzteileEingang(db.Model):
     __tablename__ = 'ersatzteile_eingang'
     Techniker = Column(String(), nullable=False)
     Datum = Column(String(), nullable=True)
     Anzahl = Column(Integer(), primary_key = False, nullable=False)
-    Artikelnummer = Column (Integer(), primary_key=True) 
+    Artikelnummer = Column (Integer(), unique=False, primary_key=False) 
     Bezeichnung = Column(String(), primary_key=False, unique=False)
     Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
-    def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
+    ID = Column(Integer(), primary_key=True)
+    def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, ID):
         self.Techniker = Techniker
         self.Datum = Datum
         self.Anzahl = Anzahl
@@ -74,6 +75,7 @@ class ErsatzteileEingang(db.Model):
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
         self.Geraet = Geraet   
+        self.ID = ID
 
 class ErsatzteileAusgang(db.Model):
     __tablename__ = 'ersatzteile_ausgang'
@@ -167,12 +169,13 @@ def insert_eingang():
         Ablaufdatum = request.form['Ablaufdatum']
         Details = request.form['Details']
         Geraet = request.form['Geraet']
+        ID = request.form['ID']
 
         if Lot == '':
             Lot = None
          
-        Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
-        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+        Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, ID)
+        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, ID)
         db.session.add(Neue_ErsatzteileEingang)
         db.session.add(Neue_ErsatzteileTechniker)
         db.session.commit() 
