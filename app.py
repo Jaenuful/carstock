@@ -29,7 +29,6 @@ class ErsatzteileAlchemy(db.Model):
     Bezeichnung = Column (String(), unique=False, nullable=False)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
-#    ErsatzteileKonrad = db.relationship('ErsatzteileKonrad')
 
 class ErsatzteileTechniker(db.Model):
     __tablename__ = 'ersatzteile_techniker'
@@ -59,6 +58,7 @@ class ErsatzteileEingang(db.Model):
     Datum = Column(String(), nullable=True)
     Anzahl = Column(Integer(), primary_key = False, nullable=False)
     Artikelnummer = Column (Integer(), unique=False, primary_key=False) 
+    #Bezeichnung = db.relationship('ErsatzteileAlchemy', lazy='select')
     Bezeichnung = Column(String(), primary_key=False, unique=False)
     Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
@@ -186,7 +186,7 @@ def insert_eingang():
 def update_eingang():
     if request.method == 'POST':
         Update_ErsatzteileEingang = ErsatzteileEingang.query.get(request.form.get('Artikelnummer'))
-        Update_ErsatzteileEingang.Anzahl = request.form['Techniker']
+        Update_ErsatzteileEingang.Techniker = request.form['Techniker']
         Update_ErsatzteileEingang.Datum = request.form['Datum']
         Update_ErsatzteileEingang.Anzahl = request.form['Anzahl']
         Update_ErsatzteileEingang.Bezeichnung = request.form['Bezeichnung']
