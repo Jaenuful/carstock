@@ -4,7 +4,9 @@
 <body class="fixed-nav sticky-footer bg-light" id="page-top">
   <div class="modal-body">
     <div class="mx-auto">
-      <h2>Hallo User</h2>
+      <h2>{% if current_user.is_authenticated %}
+        Hallo {{ username }}!
+      {% endif %}</h2>
     </div>
   </div>
     <div class="content-wrapper">

@@ -8,19 +8,48 @@ from sqlalchemy.orm.session import Session, sessionmaker
 import datetime as dt
 from sqlalchemy.dialects.postgresql import JSON
 from flask_wtf import FlaskForm
-from wtforms import SelectField
+from wtforms import SelectField, StringField, PasswordField, BooleanField
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
-from flask_login import LoginManager
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_bootstrap import Bootstrap
+from wtforms.validators import InputRequired, Email, Length
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Jan123'
+app.config['SECRET_KEY'] = 'Jan1234'
 engine = create_engine('postgresql://postgres:root@localhost/carstock')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/carstock'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-#login = LoginManager(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(15), unique=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(80))
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=80)])
+    remember = BooleanField('remember me')
+
+class RegisterForm(FlaskForm):
+    email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=80)])
+
 
 class ErsatzteileAlchemy(db.Model):
     __tablename__ = 'ersatzteile_alchemy'
@@ -139,25 +168,48 @@ class ErsatzteileKonrad(db.Model):
     
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-#    if current_user.is_authenticated:
-#        return redirect(url_for('index'))
-#    form = LoginForm()
-#    if form.validate_on_submit():
-#        user = User.query.filter_by(username=form.username.data).first()
-#        if user is None or not user.check_password(form.password.data):
- #           flash('Invalid username or password')
-  #          return redirect(url_for('login'))
-   #     login_user(user, remember=form.remember_me.data)
-    #    return redirect(url_for('index'))
-    return render_template('login.html', title='WebCarstock-Login') #form=form)
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                return redirect(url_for('index'))
 
+        return '<h1>Invalid username or password</h1>'
+        #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
+
+    return render_template('login.html', form=form)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return '<h1>New user has been created!</h1>'
+        #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
+
+    return render_template('signup.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 @app.route('/eingang', methods = ['Get','POST'])
+@login_required
 def eingang():
     ersatzteile_eingang = ErsatzteileEingang.query.all()
     return render_template('eingang.html', ersatzteile_eingang = ersatzteile_eingang, title = 'eingang')
 
 @app.route('/eingang-insert', methods = ['POST'])
+@login_required
 def insert_eingang():
     if request.method == 'POST':
         Techniker = request.form['Techniker']
@@ -183,6 +235,7 @@ def insert_eingang():
         return redirect(url_for('eingang'))  
 
 @app.route('/eingang-update', methods = ['GET','POST'])   
+@login_required
 def update_eingang():
     if request.method == 'POST':
         Update_ErsatzteileEingang = ErsatzteileEingang.query.get(request.form.get('Artikelnummer'))
@@ -202,16 +255,19 @@ def update_eingang():
         return redirect(url_for('eingang'))
 
 @app.route('/jwi', methods = ['Get','POST'])
+@login_required
 def jwi():
     ersatzteile_jwi = ErsatzteileTechniker.query.filter_by(Techniker='JWI').all()
     return render_template('jwi.html', ersatzteile_jwi = ersatzteile_jwi, title = 'jwi')
 
 @app.route('/kzb', methods = ['Get','POST'])
+@login_required
 def kzb():
     ersatzteile_kzb = ErsatzteileTechniker.query.filter_by(Techniker='KZB').all()
     return render_template('kzb.html', ersatzteile_kzb = ersatzteile_kzb, title = 'kzb')
 
 @app.route('/kzb-insert', methods = ['POST'])
+@login_required
 def insert_kzb():
     if request.method == 'POST':
         Anzahl = request.form['Anzahl']
@@ -231,7 +287,8 @@ def insert_kzb():
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('kzb'))  
 
-@app.route('/kzb-update', methods = ['GET','POST'])   
+@app.route('/kzb-update', methods = ['GET','POST']) 
+@login_required  
 def update_kzb():
     if request.method == 'POST':
         Update_ErsatzteileKonrad = ErsatzteileKonrad.query.get(request.form.get('Artikelnummer'))
@@ -249,6 +306,7 @@ def update_kzb():
         return redirect(url_for('kzb'))
 
 @app.route('/kzb-delete/<Artikelnummer>/', methods = ['GET', 'POST'])
+@login_required
 def delete_kzb(Artikelnummer):
     Delete_ErsatzteileKonrad = ErsatzteileKonrad.query.get(Artikelnummer)
     db.session.delete(Delete_ErsatzteileKonrad)
@@ -257,16 +315,19 @@ def delete_kzb(Artikelnummer):
     return redirect(url_for('kzb'))
 
 @app.route('/aka', methods = ['Get','POST'])
+@login_required
 def aka():
     ersatzteile_aka = ErsatzteileTechniker.query.filter_by(Techniker='AKA').all()
     return render_template('aka.html', ersatzteile_aka = ersatzteile_aka, title = 'aka')
 
 @app.route('/ersatzteilliste')
+@login_required
 def ersatzteilliste():
     Ersatzteile = ErsatzteileAlchemy.query.all()
     return render_template('ersatzteilliste.html', Ersatzteile = Ersatzteile, title = 'Ersatzteilliste')
 
 @app.route('/ersatzteilliste-delete/<ID>/', methods = ['GET', 'POST'])
+@login_required
 def delete_liste(ID):
     Delete_ErsatzteileAlchemy = ErsatzteileAlchemy.query.get(ID)
     db.session.delete(Delete_ErsatzteileAlchemy)
@@ -274,20 +335,24 @@ def delete_liste(ID):
     return redirect(url_for('ersatzteilliste'))
 
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html', title = 'Index')
 
 @app.route('/carstock', methods = ['Get','POST'])
+@login_required
 def techniker():
     ersatzteile_techniker = ErsatzteileTechniker.query.all()
     return render_template('carstock.html', ersatzteile_techniker = ersatzteile_techniker, title = 'Carstock-Techniker')
 
 @app.route('/bestellungen', methods = ['Get','POST'])
+@login_required
 def bestellungen():
     ersatzteile_bestellungen = ErsatzteileBestellungen.query.all()
     return render_template('bestellungen.html', ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
 
 @app.route('/bestellungen-insert', methods = ['POST'])
+@login_required
 def insert_bestellungen():
     if request.method == 'POST':
         Techniker = request.form['Techniker']
@@ -304,7 +369,8 @@ def insert_bestellungen():
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('bestellungen'))  
 
-@app.route('/bestellungen-update', methods = ['GET','POST'])   
+@app.route('/bestellungen-update', methods = ['GET','POST'])  
+@login_required 
 def update_bestellungen():
     if request.method == 'POST':
         Update_Bestellungen = ErsatzteileBestellungen.query.get(request.form.get('Artikelnummer'))
@@ -320,6 +386,7 @@ def update_bestellungen():
         return redirect(url_for('bestellungen'))
 
 @app.route('/delete_bestellungen/<Artikelnummer>/', methods = ['GET', 'POST'])
+@login_required
 def delete_bestellungen(Artikelnummer):
     Delete_Bestellungen = ErsatzteileBestellungen.query.get(Artikelnummer)
     db.session.delete(Delete_Bestellungen)
@@ -328,11 +395,13 @@ def delete_bestellungen(Artikelnummer):
     return redirect(url_for('bestellungen'))
 
 @app.route('/ausgang')
+@login_required
 def ausgang():
     ersatzteile_ausgang = ErsatzteileAusgang.query.all()
     return render_template('ausgang.html', ersatzteile_ausgang = ersatzteile_ausgang, title = 'Ausgang')
 
 @app.route('/ausgang-insert', methods = ['POST'])
+@login_required
 def insert_ausgang():
     if request.method == 'POST':
         Techniker = request.form['Techniker']
@@ -354,6 +423,7 @@ def insert_ausgang():
         return redirect(url_for('ausgang')) 
 
 @app.route('/ausgang-update', methods = ['GET','POST'])   
+@login_required
 def update_ausgang():
     if request.method == 'POST':
         Update_ErsatzteileAusgang = ErsatzteileAusgang.query.get(request.form.get('Artikelnummer'))
