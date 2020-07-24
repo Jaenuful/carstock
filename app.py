@@ -16,7 +16,6 @@ from flask_bootstrap import Bootstrap
 from wtforms.validators import InputRequired, Email, Length
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Jan1234'
 engine = create_engine('postgresql://postgres:root@localhost/carstock')
@@ -63,14 +62,14 @@ class ErsatzteileTechniker(db.Model):
     __tablename__ = 'ersatzteile_techniker'
     Techniker = Column(String(), nullable=False)
     Anzahl = Column(Integer(), primary_key = False, nullable=False)
-    Artikelnummer = Column (Integer(), primary_key=True) 
+    Artikelnummer = Column (Integer(), primary_key=False) 
     Bezeichnung = Column(String(), primary_key=False, unique=False)
     Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
-    ID = Column(Integer(), primary_key=True)
-    def __init__(self, Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, ID):
+    id = Column(Integer(), primary_key=True)
+    def __init__(self, Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
         self.Techniker = Techniker
         self.Anzahl = Anzahl
         self.Artikelnummer = Artikelnummer
@@ -79,7 +78,7 @@ class ErsatzteileTechniker(db.Model):
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
         self.Geraet = Geraet 
-        self.ID = ID
+        self.id = id 
 
 class ErsatzteileEingang(db.Model):
     __tablename__ = 'ersatzteile_eingang'
@@ -93,8 +92,10 @@ class ErsatzteileEingang(db.Model):
     Ablaufdatum = Column (String(), primary_key=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
-    ID = Column(Integer(), primary_key=True)
-    def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, ID):
+    id = Column(Integer(), primary_key=True)
+    
+
+    def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
         self.Techniker = Techniker
         self.Datum = Datum
         self.Anzahl = Anzahl
@@ -103,8 +104,9 @@ class ErsatzteileEingang(db.Model):
         self.Lot = Lot
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
-        self.Geraet = Geraet   
-        self.ID = ID
+        self.Geraet = Geraet  
+        self.id = id 
+
 
 class ErsatzteileAusgang(db.Model):
     __tablename__ = 'ersatzteile_ausgang'
@@ -176,7 +178,7 @@ def login():
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for('index'))
 
-        return '<h1>Invalid username or password</h1>'
+        return '<h1>Ungültiger Benutzername oder falsches Passwort!</h1>'
         #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
 
     return render_template('login.html', form=form)
@@ -221,13 +223,12 @@ def insert_eingang():
         Ablaufdatum = request.form['Ablaufdatum']
         Details = request.form['Details']
         Geraet = request.form['Geraet']
-        ID = request.form['ID']
 
         if Lot == '':
             Lot = None
          
-        Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, ID)
-        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, ID)
+        Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
         db.session.add(Neue_ErsatzteileTechniker)
         db.session.commit() 
@@ -337,7 +338,9 @@ def delete_liste(ID):
 @app.route('/')
 @login_required
 def index():
-    return render_template('index.html', title = 'Index')
+    form = RegisterForm()
+
+    return render_template('index.html', title = 'Index', form = form)
 
 @app.route('/carstock', methods = ['Get','POST'])
 @login_required
