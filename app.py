@@ -84,12 +84,12 @@ class ErsatzteileEingang(db.Model):
     __tablename__ = 'ersatzteile_eingang'
     Techniker = Column(String(), nullable=False)
     Datum = Column(String(), nullable=True)
-    Anzahl = Column(Integer(), primary_key = False, nullable=False)
-    Artikelnummer = Column (Integer(), unique=False, primary_key=False) 
+    Anzahl = Column(Integer(), nullable=False)
+    Artikelnummer = Column (Integer(), unique=False) 
     #Bezeichnung = db.relationship('ErsatzteileAlchemy', lazy='select')
-    Bezeichnung = Column(String(), primary_key=False, unique=False)
-    Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
-    Ablaufdatum = Column (String(), primary_key=False, nullable=True)
+    Bezeichnung = Column(String(),unique=False)
+    Lot = Column (Integer(),unique=False, nullable=True)
+    Ablaufdatum = Column (String(), nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
     id = Column(Integer(), primary_key=True)
@@ -105,7 +105,6 @@ class ErsatzteileEingang(db.Model):
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
         self.Geraet = Geraet  
-        self.id = id 
 
 
 class ErsatzteileAusgang(db.Model):
@@ -184,18 +183,16 @@ def login():
     return render_template('login.html', form=form)
 
 @app.route('/signup', methods=['GET', 'POST'])
+@login_required
 def signup():
     form = RegisterForm()
-
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-
         return '<h1>New user has been created!</h1>'
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
-
     return render_template('signup.html', form=form)
 
 @app.route('/logout')
@@ -228,9 +225,9 @@ def insert_eingang():
             Lot = None
          
         Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
-        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+        #Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
-        db.session.add(Neue_ErsatzteileTechniker)
+        #db.session.add(Neue_ErsatzteileTechniker)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('eingang'))  
