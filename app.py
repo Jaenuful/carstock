@@ -1,5 +1,4 @@
 from flask import Flask, render_template, url_for, flash, redirect, request, jsonify, make_response
-from forms import LoginForm
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, inspect, ForeignKey
@@ -17,7 +16,7 @@ from wtforms.validators import InputRequired, Email, Length
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Jan1234'
+app.config['SECRET_KEY'] = 'Jan12345678910'
 engine = create_engine('postgresql://postgres:root@localhost/carstock')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/carstock'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -27,7 +26,6 @@ migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,7 +47,6 @@ class RegisterForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=80)])
 
-
 class ErsatzteileAlchemy(db.Model):
     __tablename__ = 'ersatzteile_alchemy'
     ID = Column(Integer(), primary_key=True)
@@ -69,6 +66,7 @@ class ErsatzteileTechniker(db.Model):
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
     id = Column(Integer(), primary_key=True)
+
     def __init__(self, Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
         self.Techniker = Techniker
         self.Anzahl = Anzahl
@@ -78,7 +76,6 @@ class ErsatzteileTechniker(db.Model):
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
         self.Geraet = Geraet 
-        self.id = id 
 
 class ErsatzteileEingang(db.Model):
     __tablename__ = 'ersatzteile_eingang'
@@ -94,7 +91,6 @@ class ErsatzteileEingang(db.Model):
     Geraet = Column (String(), unique=False, nullable=True)
     id = Column(Integer(), primary_key=True)
     
-
     def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
         self.Techniker = Techniker
         self.Datum = Datum
@@ -105,7 +101,6 @@ class ErsatzteileEingang(db.Model):
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
         self.Geraet = Geraet  
-
 
 class ErsatzteileAusgang(db.Model):
     __tablename__ = 'ersatzteile_ausgang'
@@ -180,11 +175,11 @@ def login():
         return '<h1>Ungültiger Benutzername oder falsches Passwort!</h1>'
         #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'
 
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, title=login)
 
 @app.route('/signup', methods=['GET', 'POST'])
-@login_required
-def signup():
+@login_required  
+def signup():  
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
@@ -225,9 +220,9 @@ def insert_eingang():
             Lot = None
          
         Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
-        #Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
-        #db.session.add(Neue_ErsatzteileTechniker)
+        db.session.add(Neue_ErsatzteileTechniker)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('eingang'))  
