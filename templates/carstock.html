@@ -42,6 +42,7 @@
             <th>Ablaufdatum
             <th>Details
             <th>Gerät
+            <th>Test
         </thead>
         <tbody>
           {% for ersatzteile_techniker in ersatzteile_techniker %}
@@ -54,6 +55,8 @@
             <td>{{ersatzteile_techniker.Ablaufdatum}}
             <td>{{ersatzteile_techniker.Details}}
             <td>{{ersatzteile_techniker.Geraet}}
+            <td><select multiple="multiple"></select>
+              <option value="{{ersatzteile_techniker.Techniker}}">{{ersatzteile_techniker.Techniker}}</option></select>
           </tr>
     </div>
   </div>
