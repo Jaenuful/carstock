@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect, request, jsonify, make_response
+from flask import Flask, render_template, url_for, flash, redirect, request, jsonify, make_response, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, inspect, ForeignKey
@@ -327,12 +327,12 @@ def delete_liste(ID):
     db.session.commit()
     return redirect(url_for('ersatzteilliste'))
 
-@app.route('/')
+@app.route('/', methods = ['Get'])
 @login_required
 def index():
     form = RegisterForm()
-
-    return render_template('index.html', title = 'Index', form = form)
+    current_user = User.query.filter_by(username='curent_user').all()
+    return render_template('index.html', title = 'Index', form = form, current_user=current_user)
 
 @app.route('/carstock', methods = ['Get','POST'])
 @login_required
