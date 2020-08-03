@@ -218,7 +218,7 @@ def insert_eingang():
 
         if Lot == '':
             Lot = None
-         
+        
         Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
