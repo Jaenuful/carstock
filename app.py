@@ -16,10 +16,11 @@ from wtforms.validators import InputRequired, Email, Length
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'Jan12345678910'
-engine = create_engine('postgresql://postgres:root@localhost/carstock')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/carstock'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+# load config
+app.config.from_pyfile('settings.py')
+
+# setup libraries
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -49,11 +50,17 @@ class RegisterForm(FlaskForm):
 
 class ErsatzteileAlchemy(db.Model):
     __tablename__ = 'ersatzteile_alchemy'
-    ID = Column(Integer(), primary_key=True)
+    id = Column(Integer(), primary_key=True)
     Artikelnummer = Column (Integer(), unique=False) 
     Bezeichnung = Column (String(), unique=False, nullable=False)
     Details = Column (String(), unique=False, nullable=True)
-    Geraet = Column (String(), unique=False, nullable=True)
+    Geraet = Column (String(), unique=False, nullable=False)
+
+    def __init__(self, Artikelnummer, Bezeichnung, Details, Geraet):
+        self.Artikelnummer = Artikelnummer
+        self.Bezeichnung = Bezeichnung
+        self.Details = Details
+        self.Geraet = Geraet
 
 class ErsatzteileTechniker(db.Model):
     __tablename__ = 'ersatzteile_techniker'
@@ -317,7 +324,23 @@ def aka():
 @login_required
 def ersatzteilliste():
     Ersatzteile = ErsatzteileAlchemy.query.all()
+    flash("Eintrag erfolgreich gelöscht.")
     return render_template('ersatzteilliste.html', Ersatzteile = Ersatzteile, title = 'Ersatzteilliste')
+
+@app.route('/ersatzteilliste-insert', methods = ['POST'])
+@login_required
+def insert_ersatzteilliste():
+    if request.method == 'POST':
+        Artikelnummer = request.form['Artikelnummer']
+        Bezeichnung = request.form['Bezeichnung']
+        Details = request.form['Details']
+        Geraet = request.form['Geraet']
+
+        Neue_ErsatzteileAlchemy = ErsatzteileAlchemy (Artikelnummer, Bezeichnung, Details, Geraet)
+        db.session.add(Neue_ErsatzteileAlchemy)
+        db.session.commit() 
+        flash('Eintrag Erfolgreich.')
+        return redirect(url_for('ersatzteilliste'))  
 
 @app.route('/ersatzteilliste-delete/<ID>/', methods = ['GET', 'POST'])
 @login_required

@@ -2,6 +2,23 @@
 {% block content %}
 
 <body>
+  <!-- Flash Message-->
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissable" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="close"><span
+        aria-hidden="true">x</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  <div class="modal-body">
+    <div class="mx-auto">
+      <button type="button" class="btn btn-success float-sm-right" data-toggle="modal" data-target="#mymodal">Neuer
+        Eintrag</button>
       <table id="proxies" class="display table nowrap responsive" style="width: 100%">
         <thead class="thead-dark">
           <tr>
@@ -18,8 +35,9 @@
             <td>{{Ersatzteile.Bezeichnung}}
             <td>{{Ersatzteile.Details}}
             <td>{{Ersatzteile.Geraet}}
-            <td><a href="/liste-delete/{{Ersatzteile.ID}}" class="btn btn-outline-danger btn-xs float-sm-right"
-                onclick="return confirm('Are You Sure To Delete ?')">X</a>
+            <td><a href="/ersatzteilliste-delete/{{Ersatzteile.id}}"
+                class="btn btn-outline-danger btn-xs float-sm-right"
+                onclick="return confirm('Diesen Artikel wirklich löschen ?')">X</a>
           </tr>
     </div>
   </div>
@@ -27,5 +45,46 @@
   {% endfor %}
   </tbody>
   </table>
+
+  <!-- Modal Ersatzteil hinzufügen-->
+  <div id="mymodal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Ersatzteil hinzufügen</h4>
+        </div>
+
+        <div class="modal-body">
+          <form action="{{url_for('insert_ersatzteilliste')}}" method="POST">
+
+            <div class="form-group">
+              <label>Artikelnummer</label>
+              <input type="number" class="form-control" name="Artikelnummer" required="1">
+            </div>
+            <div class="form-group">
+              <label>Bezeichnung</label>
+              <input type="text" class="form-control" name="Bezeichnung"required="1">
+            </div>
+            <div class="form-group">
+              <label>Details</label>
+              <input type="text" class="form-control" name="Details">
+            </div>
+            <div class="form-group">
+              <label>Gerät</label>
+              <input type="text" class="form-control" name="Geraet"required="1">
+            </div>
+
+            <div class="form-group">
+              <button class="btn btn-primary" type="submit">Hinzufügen</button>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </tbody>
 </body>
 {% endblock %}
