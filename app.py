@@ -209,7 +209,7 @@ def eingang():
     ersatzteile_eingang = ErsatzteileEingang.query.all()
     return render_template('eingang.html', ersatzteile_eingang = ersatzteile_eingang, title = 'eingang')
 
-@app.route('/eingang-insert', methods = ['POST'])
+@app.route('/eingang-insert', methods = ['Get','POST'])
 @login_required
 def insert_eingang():
     if request.method == 'POST':
@@ -229,6 +229,34 @@ def insert_eingang():
         Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
+        
+        # Get current stock entry by Artikelnummer from ErsatzteileAlchemy
+        #entry = db...
+
+        # if entry is set
+        #if (...) {
+
+        # get old Anzahl
+        #existingAnzahl = entry.Anzahl
+
+        # delete entry by Artikelnummer
+        #db.remove(entry.ID)
+
+        # increase new Anzahl by old Anzahl
+        #Anzahl = Anzahl + existingAnzahl
+
+        # add new entry
+        #db.add(...)
+
+        # else
+        #} else {
+
+        # add new entry
+        #db.add(...)
+
+        # close if
+        #}
+
         db.session.add(Neue_ErsatzteileTechniker)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')

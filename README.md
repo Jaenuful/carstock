@@ -4,7 +4,7 @@
 
 Activate virtual env.
 
-Create `.env` file with `DATBASE_URL`.
+Create `.env` file with `DATABASE_URL`.
 
 Install dependencies.  
 `pip install -r requirements.txt`
