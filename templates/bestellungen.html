@@ -51,12 +51,94 @@
                 <a href="/update_bestellungen/{{ersatzteile_bestellungen.Artikelnummer}}"
                   class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
                   data-target="#modaledit{{ersatzteile_bestellungen.Artikelnummer}}">Edit</a>
-                  
+
                 <a href="/delete_bestellungen/{{ersatzteile_bestellungen.Artikelnummer}}"
                   class="btn btn-outline-danger btn-xs float-sm-right"
                   onclick="return confirm('Are You Sure To Delete ?')">X</a>
               </div>
           </tr>
+    </div>
+
+    <!-- Modal Ersatzteil hinzufügen-->
+    <div id="mymodal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Ersatzteil hinzufügen</h4>
+          </div>
+
+          <div class="modal-body">
+            <form action="{{url_for('insert_bestellungen')}}" method="POST">
+              <div class="form-group">
+                <label>Techniker</label>
+                <input type="text" class="form-control" id="User" name="User" list="User-list">
+                <datalist id="User-list">
+                  <option>KZB</option>
+                  <option>JWI</option>
+              </div>
+
+              <div class="form-group">
+                <label>Bestelldatum</label>
+                <input type="date" class="form-control" name="Bestelldatum">
+              </div>
+
+              <div class="form-group">
+                <label>Anzahl</label>
+                <input type="number" class="form-control" name="Anzahl" required="1">
+              </div>
+
+              <div class="form-group">
+                {% for Ersatzteile in Ersatzteile %}
+                <label>Artikelnummer</label>
+                <input type="text" class="form-control" id="Artikelnummer" name="Artikelnummer"
+                  list="Artikelnummer-list" required="1">
+                <datalist id="Artikelnummer-list">
+                  <option>{{Ersatzteile.Artikelnummer}}</option>
+                  {% endfor %}
+              </div>
+
+              <div class="form-group">
+                {% for Ersatzteile in Ersatzteile %}
+                <label>Bezeichnung</label>
+                <input type="text" class="form-control" id="Bezeichnung" name="Bezeichnung" list="Bezeichnung-list">
+                <datalist id="Bezeichnung-list">
+                  <option>{{Ersatzteile.Bezeichnung}}</option>
+                  {% endfor %}
+              </div>
+
+              <div class="form-group">
+                <label>Details</label>
+                <input type="text" class="form-control" name="Details">
+              </div>
+              <div class="form-group">
+                <label>Gerät</label>
+                <input type="text" class="form-control" id="Geraet" name="Gerät" list="Geräte-list">
+                <datalist id="Gerät-list">
+                  <option>Flex</option>
+                  <option>Flex2</option>
+                  <option>BP100+/400</option>
+                  <option>BP300</option>
+                  <option>Phox</option>
+                  <option>Allegro</option>
+                  <option>Prime</option>
+                  <option>PrimePlus</option>
+              </div>
+
+              <div class="form-group">
+                <label>Erhalten am</label>
+                <input type="date" class="form-control" name="Erhalten_am">
+              </div>
+
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit">Hinzufügen</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Modal Edit Employee-->
@@ -72,7 +154,7 @@
               <div class="form-group">
                 <label>Techniker</label>
                 <input type="hidden" name="Techniker" value="{{ersatzteile_bestellungen.Techniker}}">
-                <input type="date" class="form-control" name="Bestelldatum" 
+                <input type="date" class="form-control" name="Bestelldatum"
                   value="{{ersatzteile_bestellungen.Bestelldatum}}">
               </div>
 
@@ -114,67 +196,8 @@
     </div>
     {% endfor %}
     </table>
-
-    <!-- Modal Ersatzteil hinzufügen-->
-    <div id="mymodal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Ersatzteil hinzufügen</h4>
-          </div>
-
-          <div class="modal-body">
-            <form action="{{url_for('insert_bestellungen')}}" method="POST">
-
-              <div class="form-group">
-                <label>Techniker</label>
-                <input type="text" class="form-control" name="Techniker" required="1">
-              </div>
-
-              <div class="form-group">
-                <label>Bestelldatum</label>
-                <input type="date" class="form-control" name="Bestelldatum">
-              </div>
-
-              <div class="form-group">
-                <label>Anzahl</label>
-                <input type="number" class="form-control" name="Anzahl" required="1">
-              </div>
-
-              <div class="form-group">
-                <label>Artikelnummer</label>
-                <input type="number" class="form-control" name="Artikelnummer" required="1">
-              </div>
-
-              <div class="form-group">
-                <label>Bezeichnung</label>
-                <input type="text" class="form-control" name="Bezeichnung">
-              </div>
-              <div class="form-group">
-                <label>Details</label>
-                <input type="text" class="form-control" name="Details">
-              </div>
-              <div class="form-group">
-                <label>Gerät</label>
-                <input type="text" class="form-control" name="Geraet">
-              </div>
-            <div class="form-group">
-              <label>Erhalten am</label>
-              <input type="date" class="form-control" name="Erhalten_am">
-            </div>
-
-              <div class="form-group">
-                <button class="btn btn-primary" type="submit">Hinzufügen</button>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   </tbody>
 </body>
+
 {% endblock %}
