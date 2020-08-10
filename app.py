@@ -393,9 +393,9 @@ def techniker():
 @app.route('/bestellungen', methods = ['Get','POST'])
 @login_required
 def bestellungen():
-    Ersatzteile = ErsatzteileAlchemy.query.all()
+    #   Ersatzteile = ErsatzteileAlchemy.query.all()
     ersatzteile_bestellungen = ErsatzteileBestellungen.query.all()
-    return render_template('bestellungen.html', Ersatzteile = Ersatzteile, ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
+    return render_template('bestellungen.html',  ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
 
 @app.route('/bestellungen-insert', methods = ['POST'])
 @login_required
@@ -409,7 +409,7 @@ def insert_bestellungen():
         Details = request.form['Details']
         Geraet = request.form['Geraet']
         Erhalten_am = request.form['Erhalten_am']
-        
+
         Neue_Bestellungen = ErsatzteileBestellungen (Techniker, Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am)
         db.session.add(Neue_Bestellungen)
         db.session.commit() 
