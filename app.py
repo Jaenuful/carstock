@@ -119,6 +119,7 @@ class ErsatzteileAusgang(db.Model):
     Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
     Kunde = Column (String(), primary_key=False, unique=False, nullable=True)
     SMR = Column(Integer(), primary_key = False,unique=False, nullable=True)
+
     def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR):
         self.Techniker = Techniker
         self.Datum = Datum
@@ -134,11 +135,12 @@ class ErsatzteileBestellungen(db.Model):
     Techniker = Column(String(), nullable=False, unique=False)
     Bestelldatum = Column(String(), nullable=True, unique=False)
     Anzahl = Column(Integer(), primary_key = False, nullable=False)
-    Artikelnummer = Column (Integer(), primary_key=True) 
-    Bezeichnung = Column(String(), primary_key=False, unique=False)
+    Artikelnummer = Column (Integer(), primary_key=False) 
+    Bezeichnung = Column(String(), unique=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
     Erhalten_am = Column(String(), nullable=True, unique=False)
+    id = Column(Integer(), primary_key=True)
 
     def __init__(self, Techniker, Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am):
         self.Techniker = Techniker
@@ -147,7 +149,7 @@ class ErsatzteileBestellungen(db.Model):
         self.Artikelnummer = Artikelnummer
         self.Bezeichnung = Bezeichnung  
         self.Details = Details
-        self.Geraet = Geraet 
+        self.Geraet = Geraet
         self.Erhalten_am = Erhalten_am
 
 class ErsatzteileKonrad(db.Model):
@@ -229,7 +231,15 @@ def insert_eingang():
         Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
+
         
+        if ErsatzteileTechniker.query.filter_by(Artikelnummer = 'Artikelnummer'):
+            for Anzahl in ErsatzteileTechniker:
+                sum = ErsatzteileTechniker.query.filter_by(Anzahl + 'Anzahl')
+                ErsatzteileTechniker.update()
+
+                
+  
         # Get current stock entry by Artikelnummer from ErsatzteileAlchemy
         #entry = db...
 
@@ -410,8 +420,8 @@ def insert_bestellungen():
         Geraet = request.form['Geraet']
         Erhalten_am = request.form['Erhalten_am']
 
-        Neue_Bestellungen = ErsatzteileBestellungen (Techniker, Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am)
-        db.session.add(Neue_Bestellungen)
+        Neue_ErsatzteileBestellungen = ErsatzteileBestellungen (Techniker, Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am)
+        db.session.add(Neue_ErsatzteileBestellungen)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('bestellungen'))  
