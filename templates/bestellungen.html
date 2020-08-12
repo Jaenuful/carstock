@@ -108,7 +108,18 @@
 
               <div class="form-group">
                 <label>Gerät</label>
-                <input type="text" class="form-control" name="Geraet">
+                <input type="text" class="form-control" id="Geraet" name="Geraet" 
+                list="Geraete-list">
+                <datalist id="Geraete-list">
+                  <option>Flex</option>
+                  <option>Flex2</option>
+                  <option>BP100+/400</option>
+                  <option>BP300</option>
+                  <option>Phox</option>
+                  <option>Allegro</option>
+                  <option>Prime</option>
+                  <option>PrimePlus</option>
+              </div>
               </div>
 
               <div class="form-group">
@@ -139,14 +150,13 @@
           <div>
             <form action="{{url_for('update_bestellungen')}}" method="POST">
               <div class="form-group">
-                <label>Techniker</label>
                 <input type="hidden" name="id" value="{{ersatzteile_bestellungen.id}}">
-                <input type="number" class="form-control" name="id" value="{{ersatzteile_bestellungen.id}}">
               </div>
               <div class="form-group">
-                <label>Techniker</label>
+                <label>Techniker</label> 
                 <input type="text" class="form-control" name="Techniker" value="{{ersatzteile_bestellungen.Techniker}}">
               </div>
+
               <div class="form-group">
                 <label>Bestelldatum</label>
                 <input type="date" class="form-control" name="Bestelldatum" value="{{ersatzteile_bestellungen.Bestelldatum}}">
