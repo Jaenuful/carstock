@@ -407,7 +407,7 @@ def bestellungen():
     ersatzteile_bestellungen = ErsatzteileBestellungen.query.all()
     return render_template('bestellungen.html',  ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
 
-@app.route('/bestellungen-insert', methods = ['POST'])
+@app.route('/bestellungen-insert', methods = ['GET','POST'])
 @login_required
 def insert_bestellungen():
     if request.method == 'POST':
@@ -430,14 +430,14 @@ def insert_bestellungen():
 @login_required 
 def update_bestellungen():
     if request.method == 'POST':
-        Update_Bestellungen = ErsatzteileBestellungen.query.get(request.form.get('Artikelnummer'))
+        Update_Bestellungen = ErsatzteileBestellungen.query.get(request.form.get('id'))
         Update_Bestellungen.Techniker = request.form['Techniker']
         Update_Bestellungen.Bestelldatum = request.form['Bestelldatum']      
         Update_Bestellungen.Anzahl = request.form['Anzahl']
         Update_Bestellungen.Bezeichnung = request.form['Bezeichnung']
         Update_Bestellungen.Details = request.form['Details']
         Update_Bestellungen.Geraet = request.form['Geraet']
-        Update_Bestellungen.Erhalten_am = request.form['Erhalten am']
+        Update_Bestellungen.Erhalten_am = request.form['Erhalten_am']
         db.session.commit()
         flash("Update Erfolgreich.")
         return redirect(url_for('bestellungen'))
