@@ -442,6 +442,7 @@ def update_bestellungen():
         flash("Update Erfolgreich.")
         return redirect(url_for('bestellungen'))
 
+
 @app.route('/delete_bestellungen/<Artikelnummer>/', methods = ['GET', 'POST'])
 @login_required
 def delete_bestellungen(Artikelnummer):
