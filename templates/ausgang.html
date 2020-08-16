@@ -44,15 +44,14 @@
         <td>{{ersatzteile_ausgang.SMR}}
         <td>
           <div class="btn-group float-sm-right" role="group">
-            <a href="/update_ersatzteile/{{ersatzteile_ausgang.Artikelnummer}}"
-              class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
-              data-target="#modaledit{{ersatzteile_ausgang.Artikelnummer}}">Edit</a>
+            <a href="/update_ersatzteile/{{ersatzteile_ausgang.id}}" class="btn btn-outline-info btn-xs float-sm-right"
+              data-toggle="modal" data-target="#modaledit{{ersatzteile_ausgang.id}}">Edit</a>
           </div>
       </tr>
       </div>
 
       <!-- Modal Edit Employee-->
-      <div id="modaledit{{ ersatzteile_ausgang.Artikelnummer }}" class="modal fade" role="dialog">
+      <div id="modaledit{{ ersatzteile_ausgang.id }}" class="modal fade" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -62,8 +61,10 @@
             <div>
               <form action="{{url_for('update_ausgang')}}" method="POST">
                 <div class="form-group">
+                  <input type="hidden" name="id" value="{{ersatzteile_ausgang.id}}">
+                </div>
+                <div class="form-group">
                   <label>Techniker</label>
-                  <input type="hidden" name="Techniker" value="{{ersatzteile_ausgang.Techniker}}">
                   <input type="text" class="form-control" name="Techniker" value="{{ersatzteile_ausgang.Techniker}}">
                 </div>
                 <div class="form-group">
@@ -72,8 +73,12 @@
                 </div>
                 <div class="form-group">
                   <label>Anzahl</label>
-                  <input type="hidden" name="Artikelnummer" value="{{ersatzteile_ausgang.Artikelnummer}}">
                   <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_ausgang.Anzahl}}">
+                </div>
+                <div class="form-group">
+                  <label>Artikelnummer</label>
+                  <input type="number" class="form-control" name="Artikelnummer"
+                    value="{{ersatzteile_ausgang.Artikelnummer}}">
                 </div>
                 <div class="form-group">
                   <label>Bezeichnung</label>

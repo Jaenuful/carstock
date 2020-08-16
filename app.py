@@ -276,10 +276,11 @@ def insert_eingang():
 @login_required
 def update_eingang():
     if request.method == 'POST':
-        Update_ErsatzteileEingang = ErsatzteileEingang.query.get(request.form.get('Artikelnummer'))
+        Update_ErsatzteileEingang = ErsatzteileEingang.query.get(request.form.get('id'))
         Update_ErsatzteileEingang.Techniker = request.form['Techniker']
         Update_ErsatzteileEingang.Datum = request.form['Datum']
         Update_ErsatzteileEingang.Anzahl = request.form['Anzahl']
+        Update_ErsatzteileEingang.Artikelnummer = request.form['Artikelnummer']
         Update_ErsatzteileEingang.Bezeichnung = request.form['Bezeichnung']
         Update_ErsatzteileEingang.Lot = request.form['Lot']
         Update_ErsatzteileEingang.Ablaufdatum = request.form['Ablaufdatum']
@@ -483,10 +484,11 @@ def insert_ausgang():
 @login_required
 def update_ausgang():
     if request.method == 'POST':
-        Update_ErsatzteileAusgang = ErsatzteileAusgang.query.get(request.form.get('Artikelnummer'))
-        Update_ErsatzteileAusgang.Anzahl = request.form['Techniker']
+        Update_ErsatzteileAusgang = ErsatzteileAusgang.query.get(request.form.get('id'))
+        Update_ErsatzteileAusgang.Techniker = request.form['Techniker']
         Update_ErsatzteileAusgang.Datum = request.form['Datum']
         Update_ErsatzteileAusgang.Anzahl = request.form['Anzahl']
+        Update_ErsatzteileAusgang.Artikelnummer = request.form['Artikelnummer']
         Update_ErsatzteileAusgang.Bezeichnung = request.form['Bezeichnung']
         Update_ErsatzteileAusgang.Lot = request.form['Lot']
         Update_ErsatzteileAusgang.Kunde = request.form['Kunde']
