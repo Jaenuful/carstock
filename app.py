@@ -442,11 +442,10 @@ def update_bestellungen():
         flash("Update Erfolgreich.")
         return redirect(url_for('bestellungen'))
 
-
-@app.route('/delete_bestellungen/<Artikelnummer>/', methods = ['GET', 'POST'])
+@app.route('/delete_bestellungen/<id>/', methods = ['GET', 'POST'])
 @login_required
-def delete_bestellungen(Artikelnummer):
-    Delete_Bestellungen = ErsatzteileBestellungen.query.get(Artikelnummer)
+def delete_bestellungen(id):
+    Delete_Bestellungen = ErsatzteileBestellungen.query.get(id)
     db.session.delete(Delete_Bestellungen)
     db.session.commit()
     flash("Eintrag erfolgreich gelöscht.")
