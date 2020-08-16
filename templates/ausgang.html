@@ -123,8 +123,12 @@
           <form action="{{url_for('insert_ausgang')}}" method="POST">
             <div class="form-group">
               <label>Techniker</label>
-              <input type="text" class="form-control" name="Techniker" required="1">
-            </div>
+              <input type="text" class="form-control" id="User" name="Techniker" list="User-list">
+                <datalist id="User-list">
+                  <option>KZB</option>
+                  <option>JWI</option>
+                  <option>AKA</option>
+              </div>
             <div class="form-group">
               <label>Datum Ausgang</label>
               <input type="date" class="form-control" name="Datum">

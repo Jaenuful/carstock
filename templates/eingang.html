@@ -132,8 +132,12 @@
           <form action="{{url_for('insert_eingang')}}" method="POST">
             <div class="form-group">
               <label>Techniker</label>
-              <input type="text" class="form-control" name="Techniker" required="1">
-            </div>
+              <input type="text" class="form-control" id="User" name="Techniker" list="User-list">
+                <datalist id="User-list">
+                  <option>KZB</option>
+                  <option>JWI</option>
+                  <option>AKA</option>
+              </div>
             <div class="form-group">
               <label>Datum Eingang</label>
               <input type="date" class="form-control" name="Datum">
@@ -166,8 +170,17 @@
             </div>
             <div class="form-group">
               <label>Gerät</label>
-              <input type="text" class="form-control" name="Geraet">
-            </div>
+              <input type="text" class="form-control" id="Geraet" name="Geraet" list="Geraete-list">
+                <datalist id="Geraete-list">
+                  <option>Flex</option>
+                  <option>Flex2</option>
+                  <option>BP100+/400</option>
+                  <option>BP300</option>
+                  <option>Phox</option>
+                  <option>Allegro</option>
+                  <option>Prime</option>
+                  <option>PrimePlus</option>
+              </div>
             <div class="form-group">
               <button class="btn btn-primary" type="submit">Hinzufügen</button>
             </div>
