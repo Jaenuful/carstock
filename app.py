@@ -90,7 +90,6 @@ class ErsatzteileEingang(db.Model):
     Datum = Column(String(), nullable=True)
     Anzahl = Column(Integer(), nullable=False)
     Artikelnummer = Column (Integer(), unique=False) 
-    #Bezeichnung = db.relationship('ErsatzteileAlchemy', lazy='select')
     Bezeichnung = Column(String(),unique=False)
     Lot = Column (Integer(),unique=False, nullable=True)
     Ablaufdatum = Column (String(), nullable=True)
@@ -113,12 +112,13 @@ class ErsatzteileAusgang(db.Model):
     __tablename__ = 'ersatzteile_ausgang'
     Techniker = Column(String(), nullable=False)
     Datum = Column(String(), nullable=True)
-    Anzahl = Column(Integer(), primary_key = False, nullable=False)
-    Artikelnummer = Column (Integer(), primary_key=True) 
-    Bezeichnung = Column(String(), primary_key=False, unique=False)
-    Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
-    Kunde = Column (String(), primary_key=False, unique=False, nullable=True)
-    SMR = Column(Integer(), primary_key = False,unique=False, nullable=True)
+    Anzahl = Column(Integer(),nullable=False)
+    Artikelnummer = Column (Integer(),unique=False ) 
+    Bezeichnung = Column(String(), unique=False)
+    Lot = Column (Integer(),unique=False, nullable=True)
+    Kunde = Column (String(), unique=False, nullable=True)
+    SMR = Column(Integer(), unique=False, nullable=True)
+    id = Column(Integer(), primary_key=True)
 
     def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR):
         self.Techniker = Techniker
@@ -134,8 +134,8 @@ class ErsatzteileBestellungen(db.Model):
     __tablename__ = 'ersatzteile_bestellungen'
     Techniker = Column(String(), nullable=False, unique=False)
     Bestelldatum = Column(String(), nullable=True, unique=False)
-    Anzahl = Column(Integer(), primary_key = False, nullable=False)
-    Artikelnummer = Column (Integer(), primary_key=False) 
+    Anzahl = Column(Integer(), nullable=False)
+    Artikelnummer = Column (Integer(), unique=False) 
     Bezeichnung = Column(String(), unique=False, nullable=True)
     Details = Column (String(), unique=False, nullable=True)
     Geraet = Column (String(), unique=False, nullable=True)
@@ -233,10 +233,10 @@ def insert_eingang():
         db.session.add(Neue_ErsatzteileEingang)
 
         
-        if ErsatzteileTechniker.query.filter_by(Artikelnummer = 'Artikelnummer'):
-            for Anzahl in ErsatzteileTechniker:
-                sum = ErsatzteileTechniker.query.filter_by(Anzahl + 'Anzahl')
-                ErsatzteileTechniker.update()
+ #       if ErsatzteileTechniker.query.filter_by(Artikelnummer = 'Artikelnummer'):
+ #           for Anzahl in ErsatzteileTechniker:
+ #               sum = ErsatzteileTechniker.query.filter_by(Anzahl + 'Anzahl')
+ #               ErsatzteileTechniker.update()
 
                 
   
