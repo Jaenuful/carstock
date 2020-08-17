@@ -15,6 +15,7 @@ from flask_bootstrap import Bootstrap
 from wtforms.validators import InputRequired, Email, Length
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 app = Flask(__name__)
 
 # load config
