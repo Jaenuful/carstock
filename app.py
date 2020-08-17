@@ -51,11 +51,11 @@ class RegisterForm(FlaskForm):
 
 class ErsatzteileAlchemy(db.Model):
     __tablename__ = 'ersatzteile_alchemy'
+    Artikelnummer = Column(Integer(), unique=False) 
+    Bezeichnung = Column(String(), unique=False, nullable=False)
+    Details = Column(String(), unique=False, nullable=True)
+    Geraet = Column(String(), unique=False, nullable=False)
     id = Column(Integer(), primary_key=True)
-    Artikelnummer = Column (Integer(), unique=False) 
-    Bezeichnung = Column (String(), unique=False, nullable=False)
-    Details = Column (String(), unique=False, nullable=True)
-    Geraet = Column (String(), unique=False, nullable=False)
 
     def __init__(self, Artikelnummer, Bezeichnung, Details, Geraet):
         self.Artikelnummer = Artikelnummer
