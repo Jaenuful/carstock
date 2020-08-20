@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect, request, jsonify, make_response, session
+from flask import Flask, render_template, url_for, flash, redirect, request, jsonify, make_response, session, Response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import select
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, inspect, ForeignKey
@@ -7,14 +7,13 @@ from sqlalchemy.orm.session import Session, sessionmaker
 import datetime as dt
 from sqlalchemy.dialects.postgresql import JSON
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, PasswordField, BooleanField
+from wtforms import SelectField, StringField, PasswordField, BooleanField,TextField, Form
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bootstrap import Bootstrap
-from wtforms.validators import InputRequired, Email, Length
+from wtforms.validators import InputRequired, Email, Length, DataRequired
 from werkzeug.security import generate_password_hash, check_password_hash
-
 
 app = Flask(__name__)
 
@@ -29,6 +28,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+#@app.before_request
+#def before_request():
+#    if request.url.startswith('http://'):
+ #       url = request.url.replace('http://', 'https://', 1)
+  #      code = 301
+   #     return redirect(url, code=code)
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
@@ -38,6 +45,8 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
 
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
@@ -62,6 +71,9 @@ class ErsatzteileAlchemy(db.Model):
         self.Bezeichnung = Bezeichnung
         self.Details = Details
         self.Geraet = Geraet
+#zom üebe:
+#    def as_dict(self):
+#        return {'Artikelnummer': self.Artikelnummer}
 
 class ErsatzteileTechniker(db.Model):
     __tablename__ = 'ersatzteile_techniker'
@@ -402,16 +414,19 @@ def techniker():
     ersatzteile_techniker = ErsatzteileTechniker.query.all()
     return render_template('carstock.html', ersatzteile_techniker = ersatzteile_techniker, title = 'Carstock-Techniker')
 
-@app.route('/bestellungen', methods = ['Get','POST'])
+
+@app.route('/bestellungen', methods = ['GET','POST'])
 @login_required
 def bestellungen():
-    #   Ersatzteile = ErsatzteileAlchemy.query.all()
+   # Ersatzteile = ErsatzteileAlchemy.query.filter_by(Artikelnummer='').all()Ersatzteile = Ersatzteile,
     ersatzteile_bestellungen = ErsatzteileBestellungen.query.all()
-    return render_template('bestellungen.html',  ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
+    return render_template('bestellungen.html', ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
+
 
 @app.route('/bestellungen-insert', methods = ['GET','POST'])
 @login_required
 def insert_bestellungen():
+
     if request.method == 'POST':
         Techniker = request.form['Techniker']
         Bestelldatum = request.form['Bestelldatum']
@@ -427,6 +442,7 @@ def insert_bestellungen():
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('bestellungen'))  
+
 
 @app.route('/bestellungen-update', methods = ['GET','POST'])  
 @login_required 
