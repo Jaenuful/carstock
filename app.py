@@ -28,14 +28,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-#@app.before_request
-#def before_request():
-#    if request.url.startswith('http://'):
- #       url = request.url.replace('http://', 'https://', 1)
-  #      code = 301
-   #     return redirect(url, code=code)
-
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
@@ -45,8 +37,6 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
 
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
@@ -242,43 +232,17 @@ def insert_eingang():
             Lot = None
         
         Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
-        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
 
-        
- #       if ErsatzteileTechniker.query.filter_by(Artikelnummer = 'Artikelnummer'):
- #           for Anzahl in ErsatzteileTechniker:
- #               sum = ErsatzteileTechniker.query.filter_by(Anzahl + 'Anzahl')
- #               ErsatzteileTechniker.update()
+        Ersatzteil = ErsatzteileTechniker.query.filter_by(Artikelnummer = Artikelnummer, Techniker = Techniker, Lot = Lot).first()
 
-                
-  
-        # Get current stock entry by Artikelnummer from ErsatzteileAlchemy
-        #entry = db...
+        if Ersatzteil != None:
+            print(Ersatzteil.Artikelnummer)
+            Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
+            delete_ErsatzteileTechniker = ErsatzteileTechniker.query.get(Ersatzteil.id)
+            db.session.delete(delete_ErsatzteileTechniker)
 
-        # if entry is set
-        #if (...) {
-
-        # get old Anzahl
-        #existingAnzahl = entry.Anzahl
-
-        # delete entry by Artikelnummer
-        #db.remove(entry.ID)
-
-        # increase new Anzahl by old Anzahl
-        #Anzahl = Anzahl + existingAnzahl
-
-        # add new entry
-        #db.add(...)
-
-        # else
-        #} else {
-
-        # add new entry
-        #db.add(...)
-
-        # close if
-        #}
+        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
 
         db.session.add(Neue_ErsatzteileTechniker)
         db.session.commit() 
