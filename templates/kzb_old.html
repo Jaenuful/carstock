@@ -1,3 +1,40 @@
+@app.route('/ausgang-insert', methods = ['POST'])
+@login_required
+def insert_ausgang():
+    if request.method == 'POST':
+        Techniker = request.form['Techniker']
+        Datum =  request.form['Datum']
+        Anzahl = request.form['Anzahl']
+        Artikelnummer = request.form['Artikelnummer']
+        Bezeichnung = request.form['Bezeichnung']
+        Lot = request.form['Lot']
+        Kunde = request.form['Kunde']
+        SMR = request.form['SMR']
+
+        if Lot == '':
+            Lot = None
+
+        Neue_ErsatzteileAusgang = ErsatzteileAusgang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR)
+        db.session.add(Neue_ErsatzteileAusgang)
+
+        Ersatzteil = ErsatzteileTechniker.query.filter_by(Artikelnummer = Artikelnummer, Techniker = Techniker, Lot = Lot).first()
+        
+        if Ersatzteil != None:
+            print(Ersatzteil.Artikelnummer)
+            Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
+            delete_ErsatzteileTechniker = ErsatzteileTechniker.query.get(Ersatzteil.id)
+            db.session.delete(delete_ErsatzteileTechniker)
+
+        Ablaufdatum = Ersatzteil.Ablaufdatum
+        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+
+        db.session.add(Neue_ErsatzteileTechniker)
+        db.session.commit() 
+        flash('Eintrag Erfolgreich.')
+        return redirect(url_for('ausgang')) 
+
+
+
 {% extends 'layout.html' %}
 {% block content %}
 

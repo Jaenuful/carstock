@@ -67,7 +67,6 @@
         <th>Ablaufdatum
         <th>Details
         <th>Gerät
-        <th>Bearbeiten
     </thead>
     <tbody>
       {% for ersatzteile_eingang in ersatzteile_eingang %}
@@ -81,11 +80,11 @@
         <td>{{ersatzteile_eingang.Ablaufdatum}}
         <td>{{ersatzteile_eingang.Details}}
         <td>{{ersatzteile_eingang.Geraet}}
-        <td>
+    <!-- Bearbeiten    <td>
           <div class="btn-group float-sm-right" role="group">
             <a href="/update_ersatzteile/{{ersatzteile_eingang.id}}"
               class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
-              data-target="#modaledit{{ersatzteile_eingang.id}}">Edit</a>
+              data-target="#modaledit{{ersatzteile_eingang.id}}">Edit</a> -->
           </div>
       </tr>
       </div>
@@ -169,7 +168,7 @@
           <form action="{{url_for('insert_eingang')}}" method="POST">
             <div class="form-group">
               <label>Techniker</label>
-              <input type="text" class="form-control" id="User" name="Techniker" list="User-list">
+              <input type="text" class="form-control" id="User" name="Techniker" list="User-list" required="1">
                 <datalist id="User-list">
                   <option>KZB</option>
                   <option>JWI</option>
@@ -185,12 +184,10 @@
             </div>
             <div class="form-group">
               <label>Artikelnummer</label>
-              <input type="number" class="form-control" name="Artikelnummer" required="1">
+              <input type="text" class="form-control" name="Artikelnummer" required="1">
             </div>
             <div class="form-group">
               <label>Bezeichnung</label>
-              <select name="cars" id="cars">
-              </select>
               <input type="text" class="form-control" name="Bezeichnung">
             </div>
             <div class="form-group">
