@@ -112,11 +112,11 @@
                 </div>
                 <div class="form-group">
                   <label>Anzahl</label>
-                  <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_eingang.Anzahl}}">
+                  <input type="number" min="0" class="form-control" name="Anzahl" value="{{ersatzteile_eingang.Anzahl}}">
                 </div>
                 <div class="form-group">
                   <label>Artikelnummer</label>
-                  <input type="number" class="form-control" name="Artikelnummer" value="{{ersatzteile_eingang.Artikelnummer}}">
+                  <input type="text" class="form-control" name="Artikelnummer" value="{{ersatzteile_eingang.Artikelnummer}}">
                 </div>
                 <div class="form-group">
                   <label>Bezeichnung</label>
@@ -179,7 +179,7 @@
             </div>
             <div class="form-group">
               <label>Anzahl</label>
-              <input type="number" class="form-control" name="Anzahl" required="1">
+              <input type="number" min="0" class="form-control" name="Anzahl" required="1">
             </div>
             <div class="form-group">
               <label>Artikelnummer</label>
@@ -191,7 +191,7 @@
             </div>
             <div class="form-group">
               <label>Lot</label>
-              <input type="number" class="form-control" name="Lot">
+              <input type="text" class="form-control" name="Lot">
             </div>
             <div class="form-group">
               <label>Ablaufdatum</label>

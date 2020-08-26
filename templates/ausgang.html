@@ -65,7 +65,6 @@
         <th>Lot
         <th>Kunde
         <th>SMR
-        <th>Bearbeiten
     </thead>
     <tbody>
       {% for ersatzteile_ausgang in ersatzteile_ausgang %}
@@ -78,10 +77,10 @@
         <td>{{ersatzteile_ausgang.Lot}}
         <td>{{ersatzteile_ausgang.Kunde}}
         <td>{{ersatzteile_ausgang.SMR}}
-        <td>
+      <!--  <td>
           <div class="btn-group float-sm-right" role="group">
             <a href="/update_ersatzteile/{{ersatzteile_ausgang.id}}" class="btn btn-outline-info btn-xs float-sm-right"
-              data-toggle="modal" data-target="#modaledit{{ersatzteile_ausgang.id}}">Edit</a>
+              data-toggle="modal" data-target="#modaledit{{ersatzteile_ausgang.id}}">Edit</a> -->
           </div>
       </tr>
       </div>
@@ -171,7 +170,7 @@
             </div>
             <div class="form-group">
               <label>Anzahl</label>
-              <input type="number" class="form-control" name="Anzahl" required="1">
+              <input type="number" max="0" class="form-control" name="Anzahl" required="1">
             </div>
             <div class="form-group">
               <label>Artikelnummer</label>
