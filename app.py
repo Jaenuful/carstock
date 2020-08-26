@@ -237,7 +237,7 @@ def insert_eingang():
         Ersatzteil = ErsatzteileTechniker.query.filter_by(Artikelnummer = Artikelnummer, Techniker = Techniker, Lot = Lot).first()
 
         if Ersatzteil != None:
-            print(Ersatzteil.Artikelnummer)
+            #print(Ersatzteil.Artikelnummer)
             Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
             delete_ErsatzteileTechniker = ErsatzteileTechniker.query.get(Ersatzteil.id)
             db.session.delete(delete_ErsatzteileTechniker)
@@ -248,6 +248,63 @@ def insert_eingang():
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('eingang'))  
+
+@app.route('/ausgang')
+@login_required
+def ausgang():
+    ersatzteile_ausgang = ErsatzteileAusgang.query.all()
+    return render_template('ausgang.html', ersatzteile_ausgang = ersatzteile_ausgang, title = 'Ausgang')
+
+@app.route('/ausgang-insert', methods = ['POST'])
+@login_required
+def insert_ausgang():
+    if request.method == 'POST':
+        Techniker = request.form['Techniker']
+        Datum =  request.form['Datum']
+        Anzahl = request.form['Anzahl']
+        Artikelnummer = request.form['Artikelnummer']
+        Bezeichnung = request.form['Bezeichnung']
+        Lot = request.form['Lot']
+        Kunde = request.form['Kunde']
+        SMR = request.form['SMR']
+
+        if Lot == '':
+            Lot = None
+
+        Neue_ErsatzteileAusgang = ErsatzteileAusgang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR)
+        db.session.add(Neue_ErsatzteileAusgang)
+
+        Ersatzteil = ErsatzteileTechniker.query.filter_by(Artikelnummer = Artikelnummer, Techniker = Techniker, Lot = Lot).first()
+
+        if Ersatzteil != None:
+            Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
+            Ersatzteil.Anzahl = Anzahl
+            db.session.commit
+
+        db.session.commit() 
+        flash('Eintrag Erfolgreich.')
+        return redirect(url_for('ausgang')) 
+
+@app.route('/ausgang-update', methods = ['GET','POST'])   
+@login_required
+def update_ausgang():
+    if request.method == 'POST':
+        Update_ErsatzteileAusgang = ErsatzteileAusgang.query.get(request.form.get('id'))
+        Update_ErsatzteileAusgang.Techniker = request.form['Techniker']
+        Update_ErsatzteileAusgang.Datum = request.form['Datum']
+        Update_ErsatzteileAusgang.Anzahl = request.form['Anzahl']
+        Update_ErsatzteileAusgang.Artikelnummer = request.form['Artikelnummer']
+        Update_ErsatzteileAusgang.Bezeichnung = request.form['Bezeichnung']
+        Update_ErsatzteileAusgang.Lot = request.form['Lot']
+        Update_ErsatzteileAusgang.Kunde = request.form['Kunde']
+        Update_ErsatzteileAusgang.SMR = request.form['SMR']
+
+        if Update_ErsatzteileAusgang.Lot == '':
+            Update_ErsatzteileAusgang.Lot = None
+        db.session.commit()
+        flash("Update Erfolgreich.")
+        return redirect(url_for('ausgang'))
+
 
 @app.route('/eingang-update', methods = ['GET','POST'])   
 @login_required
@@ -432,54 +489,6 @@ def delete_bestellungen(id):
     db.session.commit()
     flash("Eintrag erfolgreich gelöscht.")
     return redirect(url_for('bestellungen'))
-
-@app.route('/ausgang')
-@login_required
-def ausgang():
-    ersatzteile_ausgang = ErsatzteileAusgang.query.all()
-    return render_template('ausgang.html', ersatzteile_ausgang = ersatzteile_ausgang, title = 'Ausgang')
-
-@app.route('/ausgang-insert', methods = ['POST'])
-@login_required
-def insert_ausgang():
-    if request.method == 'POST':
-        Techniker = request.form['Techniker']
-        Datum =  request.form['Datum']
-        Anzahl = request.form['Anzahl']
-        Artikelnummer = request.form['Artikelnummer']
-        Bezeichnung = request.form['Bezeichnung']
-        Lot = request.form['Lot']
-        Kunde = request.form['Kunde']
-        SMR = request.form['SMR']
-
-        if Lot == '':
-            Lot = None
-
-        Neue_ErsatzteileAusgang = ErsatzteileAusgang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR)
-        db.session.add(Neue_ErsatzteileAusgang)
-        db.session.commit() 
-        flash('Eintrag Erfolgreich.')
-        return redirect(url_for('ausgang')) 
-
-@app.route('/ausgang-update', methods = ['GET','POST'])   
-@login_required
-def update_ausgang():
-    if request.method == 'POST':
-        Update_ErsatzteileAusgang = ErsatzteileAusgang.query.get(request.form.get('id'))
-        Update_ErsatzteileAusgang.Techniker = request.form['Techniker']
-        Update_ErsatzteileAusgang.Datum = request.form['Datum']
-        Update_ErsatzteileAusgang.Anzahl = request.form['Anzahl']
-        Update_ErsatzteileAusgang.Artikelnummer = request.form['Artikelnummer']
-        Update_ErsatzteileAusgang.Bezeichnung = request.form['Bezeichnung']
-        Update_ErsatzteileAusgang.Lot = request.form['Lot']
-        Update_ErsatzteileAusgang.Kunde = request.form['Kunde']
-        Update_ErsatzteileAusgang.SMR = request.form['SMR']
-
-        if Update_ErsatzteileAusgang.Lot == '':
-            Update_ErsatzteileAusgang.Lot = None
-        db.session.commit()
-        flash("Update Erfolgreich.")
-        return redirect(url_for('ausgang'))
 
 if __name__ == '__main__':
     app.run()
