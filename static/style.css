@@ -1,14 +1,5 @@
 html, body {
-    margin: 0;
-    height: 100%;
-}
-body {
-    box-sizing: border-box;
-    border: solid red 5px;
-    border-radius: 2em;
-}
 
-body {
     background: #fffefef6;
     color: #333333;
     margin: 0;
