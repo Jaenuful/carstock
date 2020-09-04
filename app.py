@@ -451,7 +451,6 @@ def bestellungen():
 @app.route('/bestellungen-insert', methods = ['GET','POST'])
 @login_required
 def insert_bestellungen():
-
     if request.method == 'POST':
         Techniker = request.form['Techniker']
         Bestelldatum = request.form['Bestelldatum']
