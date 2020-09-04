@@ -30,7 +30,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href='logout'><span class="glyphicon glyphicon-log-in"></span>Logout</a></li>
-      </ul>              
+      </ul>
     </div>
   </nav>
 </header>
@@ -80,7 +80,7 @@
         <td>{{ersatzteile_eingang.Ablaufdatum}}
         <td>{{ersatzteile_eingang.Details}}
         <td>{{ersatzteile_eingang.Geraet}}
-    <!-- Bearbeiten    <td>
+          <!-- Bearbeiten    <td>
           <div class="btn-group float-sm-right" role="group">
             <a href="/update_ersatzteile/{{ersatzteile_eingang.id}}"
               class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
@@ -94,7 +94,8 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Update: {{ersatzteile_eingang.Artikelnummer}}-{{ersatzteile_eingang.Bezeichnung}}</h4>
+              <h4 class="modal-title">Update: {{ersatzteile_eingang.Artikelnummer}}-{{ersatzteile_eingang.Bezeichnung}}
+              </h4>
             </div>
 
             <div>
@@ -112,11 +113,13 @@
                 </div>
                 <div class="form-group">
                   <label>Anzahl</label>
-                  <input type="number" min="0" class="form-control" name="Anzahl" value="{{ersatzteile_eingang.Anzahl}}">
+                  <input type="number" min="0" class="form-control" name="Anzahl"
+                    value="{{ersatzteile_eingang.Anzahl}}">
                 </div>
                 <div class="form-group">
                   <label>Artikelnummer</label>
-                  <input type="text" class="form-control" name="Artikelnummer" value="{{ersatzteile_eingang.Artikelnummer}}">
+                  <input type="text" class="form-control" name="Artikelnummer"
+                    value="{{ersatzteile_eingang.Artikelnummer}}">
                 </div>
                 <div class="form-group">
                   <label>Bezeichnung</label>
@@ -168,11 +171,12 @@
             <div class="form-group">
               <label>Techniker</label>
               <input type="text" class="form-control" id="User" name="Techniker" list="User-list" required="1">
-                <datalist id="User-list">
-                  <option>KZB</option>
-                  <option>JWI</option>
-                  <option>AKA</option>
-              </div>
+              <datalist id="User-list">
+                <option>KZB</option>
+                <option>JWI</option>
+                <option>AKA</option>
+                <option>DHU</option>
+            </div>
             <div class="form-group">
               <label>Datum Eingang</label>
               <input type="date" class="form-control" name="Datum">
@@ -204,21 +208,24 @@
             <div class="form-group">
               <label>Gerät</label>
               <input type="text" class="form-control" id="Geraet" name="Geraet" list="Geraete-list">
-                <datalist id="Geraete-list">
-                  <option>Flex</option>
-                  <option>Flex2</option>
-                  <option>BP100+/400</option>
-                  <option>BP300</option>
-                  <option>Phox</option>
-                  <option>Allegro</option>
-                  <option>Prime</option>
-                  <option>PrimePlus</option>
-              </div>
+              <datalist id="Geraete-list">
+                <option>Flex</option>
+                <option>Flex2</option>
+                <option>BP100+/400</option>
+                <option>BP300</option>
+                <option>Phox</option>
+                <option>Allegro</option>
+                <option>Prime</option>
+                <option>PrimePlus</option>
+            </div>
+            <div class="form-group">
+              <label>Kit</label>
+              <input type="text" class="form-control" name="Kit">
+            </div>
             <div class="form-group">
               <button class="btn btn-primary" type="submit">Hinzufügen</button>
             </div>
           </form>
-
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
           </div>
