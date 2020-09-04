@@ -440,7 +440,6 @@ def techniker():
     ersatzteile_techniker = ErsatzteileTechniker.query.all()
     return render_template('carstock.html', ersatzteile_techniker = ersatzteile_techniker, title = 'Carstock-Techniker')
 
-
 @app.route('/bestellungen', methods = ['GET','POST'])
 @login_required
 def bestellungen():
