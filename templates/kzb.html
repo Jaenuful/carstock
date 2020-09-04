@@ -73,6 +73,7 @@
             <th>Ablaufdatum
             <th>Details
             <th>Gerät
+            <th>Kit
         </thead>
         <tbody>
           {% for ersatzteile_techniker in ersatzteile_kzb %}
@@ -84,6 +85,7 @@
             <td>{{ersatzteile_techniker.Ablaufdatum}}
             <td>{{ersatzteile_techniker.Details}}
             <td>{{ersatzteile_techniker.Geraet}}
+            <td>{{ersatzteile_techniker.Kit}}
           </tr>
     </div>
     {% endfor %}

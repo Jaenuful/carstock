@@ -55,15 +55,15 @@ class ErsatzteileAlchemy(db.Model):
     Details = Column(String(), unique=False, nullable=True)
     Geraet = Column(String(), unique=False, nullable=False)
     id = Column(Integer(), primary_key=True)
+    
+    def __repr__(self):
+        return '<Artikelnummer %r>' % self.id
 
     def __init__(self, Artikelnummer, Bezeichnung, Details, Geraet):
         self.Artikelnummer = Artikelnummer
         self.Bezeichnung = Bezeichnung
         self.Details = Details
         self.Geraet = Geraet
-#zom üebe:
-#    def as_dict(self):
-#        return {'Artikelnummer': self.Artikelnummer}
 
 class ErsatzteileTechniker(db.Model):
     __tablename__ = 'ersatzteile_techniker'
@@ -305,7 +305,6 @@ def update_ausgang():
         flash("Update Erfolgreich.")
         return redirect(url_for('ausgang'))
 
-
 @app.route('/eingang-update', methods = ['GET','POST'])   
 @login_required
 def update_eingang():
@@ -439,10 +438,10 @@ def techniker():
 @app.route('/bestellungen', methods = ['GET','POST'])
 @login_required
 def bestellungen():
-   # Ersatzteile = ErsatzteileAlchemy.query.filter_by(Artikelnummer='').all()Ersatzteile = Ersatzteile,
     ersatzteile_bestellungen = ErsatzteileBestellungen.query.all()
-    return render_template('bestellungen.html', ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
+    #Bezeichnung = ErsatzteileAlchemy.query.all()
 
+    return render_template('bestellungen.html', ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
 
 @app.route('/bestellungen-insert', methods = ['GET','POST'])
 @login_required
@@ -463,7 +462,6 @@ def insert_bestellungen():
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('bestellungen'))  
-
 
 @app.route('/bestellungen-update', methods = ['GET','POST'])  
 @login_required 
