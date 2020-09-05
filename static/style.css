@@ -1,0 +1,29 @@
+html, body {
+
+    background: #fffefef6;
+    color: #333333;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #383838;
+}
+
+header {
+    background: #5bcaec;
+    padding:    20px
+    
+}
+
+section {
+    background: rgb(216, 214, 214);
+    padding: 10px 30px 10px 20px
+}
+
+footer {
+    background: #087bdab0;
+    padding:    20px
+}
+
+
