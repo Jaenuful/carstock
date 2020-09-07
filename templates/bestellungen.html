@@ -30,7 +30,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href='logout'><span class="glyphicon glyphicon-log-in"></span>Logout</a></li>
-      </ul>              
+      </ul>
     </div>
   </nav>
 </header>
@@ -56,193 +56,189 @@
     <div class="mt-1">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <h6>Bestellungen können informativ hinterlegt werden, sind aber nicht mit anderen Tabellen verknüpft.</h6>
-  </div>
-  
-  <div class="modal-body">
-    <div class="mx-auto">
-      <button type="button" class="btn btn-success float-sm-right" data-toggle="modal" data-target="#mymodal">Neue
-        Bestellung</button>
-
-      <table id="proxies" class="display table nowrap responsive" style="width: 100%">
-        <thead class="thead-dark">
-          <tr>
-            <th>Techniker
-            <th>Bestelldatum
-            <th>Anzahl
-            <th>Ref
-            <th>Bezeichnung
-            <th>Details
-            <th>Gerät
-            <th>Erhalten am
-            <th>Bearbeiten
-        </thead>
-        <tbody>
-          {% for ersatzteile_bestellungen in ersatzteile_bestellungen %}
-          <tr>
-            <td>{{ersatzteile_bestellungen.Techniker}}
-            <td>{{ersatzteile_bestellungen.Bestelldatum}}
-            <td>{{ersatzteile_bestellungen.Anzahl}}
-            <td>{{ersatzteile_bestellungen.Artikelnummer}}
-            <td>{{ersatzteile_bestellungen.Bezeichnung}}
-            <td>{{ersatzteile_bestellungen.Details}}
-            <td>{{ersatzteile_bestellungen.Geraet}}
-            <td>{{ersatzteile_bestellungen.Erhalten_am}}
-            <td>
-              <div class="btn-group float-sm-right" role="group">
-                <a href="/update_bestellungen/{{ersatzteile_bestellungen.id}}"
-                  class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
-                  data-target="#modaledit{{ersatzteile_bestellungen.id}}">Edit</a>
-
-                <a href="/delete_bestellungen/{{ersatzteile_bestellungen.id}}"
-                  class="btn btn-outline-danger btn-xs float-sm-right"
-                  onclick="return confirm('Are You Sure To Delete ?')">X</a>
-              </div>
-          </tr>
     </div>
-    
-    <!-- Modal Ersatzteil hinzufügen-->
-    <div id="mymodal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Ersatzteil hinzufügen</h4>
-          </div>
 
-          <div class="modal-body">
-            <form action="{{url_for('insert_bestellungen')}}" method="POST">
+    <div class="modal-body">
+      <div class="mx-auto">
+        <button type="button" class="btn btn-success float-sm-right" data-toggle="modal" data-target="#mymodal">Neue
+          Bestellung</button>
+
+        <table id="proxies" class="display table nowrap responsive" style="width: 100%">
+          <thead class="thead-dark">
+            <tr>
+              <th>Techniker
+              <th>Bestelldatum
+              <th>Anzahl
+              <th>Ref
+              <th>Bezeichnung
+              <th>Details
+              <th>Gerät
+              <th>Erhalten am
+              <th>Bearbeiten
+          </thead>
+          <tbody>
+            {% for ersatzteile_bestellungen in ersatzteile_bestellungen %}
+            <tr>
+              <td>{{ersatzteile_bestellungen.Techniker}}
+              <td>{{ersatzteile_bestellungen.Bestelldatum}}
+              <td>{{ersatzteile_bestellungen.Anzahl}}
+              <td>{{ersatzteile_bestellungen.Artikelnummer}}
+              <td>{{ersatzteile_bestellungen.Bezeichnung}}
+              <td>{{ersatzteile_bestellungen.Details}}
+              <td>{{ersatzteile_bestellungen.Geraet}}
+              <td>{{ersatzteile_bestellungen.Erhalten_am}}
+              <td>
+                <div class="btn-group float-sm-right" role="group">
+                  <a href="/update_bestellungen/{{ersatzteile_bestellungen.id}}"
+                    class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
+                    data-target="#modaledit{{ersatzteile_bestellungen.id}}">Edit</a>
+
+                  <a href="/delete_bestellungen/{{ersatzteile_bestellungen.id}}"
+                    class="btn btn-outline-danger btn-xs float-sm-right"
+                    onclick="return confirm('Are You Sure To Delete ?')">X</a>
+                </div>
+            </tr>
+      </div>
+
+      <!-- Modal Ersatzteil hinzufügen-->
+      <div id="mymodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Ersatzteil hinzufügen</h4>
+            </div>
+
+            <div class="modal-body">
+              <form action="{{url_for('insert_bestellungen')}}" method="POST">
+                <div class="form-group">
+                  <label>Techniker</label>
+                  <input type="text" class="form-control" id="User" name="Techniker" list="User-list">
+                  <datalist id="User-list">
+                    <option>KZB</option>
+                    <option>JWI</option>
+                    <option>AKA</option>
+                    <option>DHU</option>
+                </div>
+
+                <div class="form-group">
+                  <label>Bestelldatum</label>
+                  <input type="date" class="form-control" name="Bestelldatum">
+                </div>
+
+                <div class="form-group">
+                  <label>Anzahl</label>
+                  <input type="number" class="form-control" name="Anzahl" required="1">
+                </div>
+
+                <div class="form-group">
+                  <label>Artikelnummer</label>
+                  <input type="text" class="form-control" name="Artikelnummer" required="1">
+                </div>
+
+                <div class="form-group">
+                  <label>Bezeichnung</label>
+                  <input type="text" class="form-control" name="Bezeichnung">
+                </div>
+
+                <div class="form-group">
+                  <label>Details</label>
+                  <input type="text" class="form-control" name="Details">
+                </div>
+
+                <div class="form-group">
+                  <label>Gerät</label>
+                  <input type="text" class="form-control" id="Geraet" name="Geraet" list="Geraete-list">
+                  <datalist id="Geraete-list">
+                    <option>Flex</option>
+                    <option>Flex2</option>
+                    <option>BP100+/400</option>
+                    <option>BP300</option>
+                    <option>Phox</option>
+                    <option>Allegro</option>
+                    <option>Prime</option>
+                    <option>PrimePlus</option>
+                </div>
+
+                <div class="form-group">
+                  <label>Erhalten am</label>
+                  <input type="date" class="form-control" name="Erhalten_am">
+                </div>
+
+                <div class="form-group">
+                  <button class="btn btn-primary" type="submit">Hinzufügen</button>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Edit -->
+      <div id="modaledit{{ ersatzteile_bestellungen.id }}" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Update Ersatzteil:
+                {{ersatzteile_bestellungen.Artikelnummer}}-{{ersatzteile_bestellungen.Bezeichnung}}</h4>
+            </div>
+
+            <form action="{{url_for('update_bestellungen')}}" method="POST">
+              <div class="form-group">
+                <input type="hidden" name="id" value="{{ersatzteile_bestellungen.id}}">
+              </div>
               <div class="form-group">
                 <label>Techniker</label>
-                <input type="text" class="form-control" id="User" name="Techniker" list="User-list">
-                <datalist id="User-list">
-                  <option>KZB</option>
-                  <option>JWI</option>
-                  <option>AKA</option>
-                  <option>DHU</option>
+                <input type="text" class="form-control" name="Techniker" value="{{ersatzteile_bestellungen.Techniker}}">
               </div>
 
               <div class="form-group">
                 <label>Bestelldatum</label>
-                <input type="date" class="form-control" name="Bestelldatum">
+                <input type="date" class="form-control" name="Bestelldatum"
+                  value="{{ersatzteile_bestellungen.Bestelldatum}}">
               </div>
-
               <div class="form-group">
                 <label>Anzahl</label>
-                <input type="number" class="form-control" name="Anzahl" required="1">
+                <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_bestellungen.Anzahl}}">
               </div>
-
-              <div class="form-group">
-                <label>Artikelnummer</label>
-                <input type="text" class="form-control" name="Artikelnummer" required="1">
-              </div>
-
               <div class="form-group">
                 <label>Bezeichnung</label>
-                <input type="text" class="form-control" name="Bezeichnung">
+                <input type="text" class="form-control" name="Bezeichnung"
+                  value="{{ersatzteile_bestellungen.Bezeichnung}}">
               </div>
 
               <div class="form-group">
                 <label>Details</label>
-                <input type="text" class="form-control" name="Details">
+                <input type="text" class="form-control" name="Details" value="{{ersatzteile_bestellungen.Details}}">
               </div>
 
               <div class="form-group">
                 <label>Gerät</label>
-                <input type="text" class="form-control" id="Geraet" name="Geraet" list="Geraete-list">
-                <datalist id="Geraete-list">
-                  <option>Flex</option>
-                  <option>Flex2</option>
-                  <option>BP100+/400</option>
-                  <option>BP300</option>
-                  <option>Phox</option>
-                  <option>Allegro</option>
-                  <option>Prime</option>
-                  <option>PrimePlus</option>
+                <input type="text" class="form-control" name="Geraet" value="{{ersatzteile_bestellungen.Geraet}}">
               </div>
 
-          <div class="form-group">
-            <label>Erhalten am</label>
-            <input type="date" class="form-control" name="Erhalten_am">
-          </div>
+              <div class="form-group">
+                <label>Erhalten am</label>
+                <input type="date" class="form-control" name="Erhalten_am"
+                  value="{{ersatzteile_bestellungen.Erhalten_am}}">
+              </div>
 
-          <div class="form-group">
-            <button class="btn btn-primary" type="submit">Hinzufügen</button>
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit">Update</button>
+              </div>
+            </form>
           </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Modal Edit -->
-  <div id="modaledit{{ ersatzteile_bestellungen.id }}" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Update Ersatzteil:
-            {{ersatzteile_bestellungen.Artikelnummer}}-{{ersatzteile_bestellungen.Bezeichnung}}</h4>
-        </div>
-        
-          <form action="{{url_for('update_bestellungen')}}" method="POST">
-            <div class="form-group">
-              <input type="hidden" name="id" value="{{ersatzteile_bestellungen.id}}">
-            </div>
-            <div class="form-group">
-              <label>Techniker</label>
-              <input type="text" class="form-control" name="Techniker" value="{{ersatzteile_bestellungen.Techniker}}">
-            </div>
-
-            <div class="form-group">
-              <label>Bestelldatum</label>
-              <input type="date" class="form-control" name="Bestelldatum"
-                value="{{ersatzteile_bestellungen.Bestelldatum}}">
-            </div>
-            <div class="form-group">
-              <label>Anzahl</label>
-              <input type="number" class="form-control" name="Anzahl" value="{{ersatzteile_bestellungen.Anzahl}}">
-            </div>
-            <div class="form-group">
-              <label>Bezeichnung</label>
-              <input type="text" class="form-control" name="Bezeichnung"
-                value="{{ersatzteile_bestellungen.Bezeichnung}}">
-            </div>
-
-            <div class="form-group">
-              <label>Details</label>
-              <input type="text" class="form-control" name="Details" value="{{ersatzteile_bestellungen.Details}}">
-            </div>
-
-            <div class="form-group">
-              <label>Gerät</label>
-              <input type="text" class="form-control" name="Geraet" value="{{ersatzteile_bestellungen.Geraet}}">
-            </div>
-
-            <div class="form-group">
-              <label>Erhalten am</label>
-              <input type="date" class="form-control" name="Erhalten_am"
-                value="{{ersatzteile_bestellungen.Erhalten_am}}">
-            </div>
-
-            <div class="form-group">
-              <button class="btn btn-primary" type="submit">Update</button>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-  </table>
+    {% endfor %}
+    </table>
   </div>
   </tbody>
 </body>
-
-
-
-
 {% endblock %}
