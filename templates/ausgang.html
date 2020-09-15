@@ -122,7 +122,7 @@
                 </div>
                 <div class="form-group">
                   <label>Lot</label>
-                  <input type="number" class="form-control" name="Lot" value="{{ersatzteile_ausgang.Lot}}">
+                  <input type="text" class="form-control" name="Lot" value="{{ersatzteile_ausgang.Lot}}">
                 </div>
                 <div class="form-group">
                   <label>Kunde</label>
@@ -181,12 +181,14 @@
               <label>Bezeichnung</label>
               <input type="text" class="form-control" name="Bezeichnung">
             </div>
+
             <div class="form-group">
               <label>Lot</label>
-              <input type="text" class="form-control" id="Lot name="Lot-List" list="Lot-list">
+              <input type="text" class="form-control" name="Lot" list="Lot-List">
                 <datalist id="Lot-List">
                   <option>None</option>
             </div>
+            
             <div class="form-group">
               <label>Kunde</label>
               <input type="text" class="form-control" name="Kunde">
