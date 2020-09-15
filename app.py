@@ -237,7 +237,6 @@ def insert_eingang():
         Ersatzteil = ErsatzteileTechniker.query.filter_by(Artikelnummer = Artikelnummer, Techniker = Techniker, Lot = Lot).first()
 
         if Ersatzteil != None:
-            #print(Ersatzteil.Artikelnummer)
             Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
             delete_ErsatzteileTechniker = ErsatzteileTechniker.query.get(Ersatzteil.id)
             db.session.delete(delete_ErsatzteileTechniker)
@@ -444,8 +443,6 @@ def techniker():
 @login_required
 def bestellungen():
     ersatzteile_bestellungen = ErsatzteileBestellungen.query.all()
-    #Bezeichnung = ErsatzteileAlchemy.query.all()
-
     return render_template('bestellungen.html', ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
 
 @app.route('/bestellungen-insert', methods = ['GET','POST'])
