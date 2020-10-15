@@ -397,6 +397,18 @@ def dhu():
     ersatzteile_dhu = ErsatzteileTechniker.query.filter_by(Techniker='DHU').all()
     return render_template('dhu.html', ersatzteile_dhu = ersatzteile_dhu, title = 'dhu')
 
+@app.route('/vgu', methods = ['Get','POST'])
+@login_required
+def vgu():
+    ersatzteile_vgu = ErsatzteileTechniker.query.filter_by(Techniker='VGU').all()
+    return render_template('vgu.html', ersatzteile_vgu = ersatzteile_vgu, title = 'vgu')
+
+@app.route('/sro', methods = ['Get','POST'])
+@login_required
+def sro():
+    ersatzteile_sro = ErsatzteileTechniker.query.filter_by(Techniker='SRO').all()
+    return render_template('sro.html', ersatzteile_sro = ersatzteile_sro, title = 'sro')
+
 @app.route('/ersatzteilliste')
 @login_required
 def ersatzteilliste():

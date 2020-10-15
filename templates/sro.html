@@ -50,17 +50,17 @@
         <li class="nav-item">
           <a class="nav-link" href="/kzb">Konrad Zbinden</a>
         </li>
-        <li class="nav-item ">
+        <li class="nav-item">
           <a class="nav-link" href="/vgu">Volkan Gür</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/sro">Sophie Rochat</a>
+        <li class="nav-item active">
+          <a class="nav-link" href="/sro"><h6>Sophie Rochat</h6><span class="sr-only">(current)</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/jwi">Jan Willimann</a>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/dhu"><h6>Daniel Hutter</h6><span class="sr-only">(current)</a>
+        <li class="nav-item ">
+          <a class="nav-link" href="/dhu">Daniel Hutter</a>
         </li>
       </ul>
     </div>
@@ -79,7 +79,7 @@
             <th>Gerät
         </thead>
         <tbody>
-          {% for ersatzteile_techniker in ersatzteile_dhu %}
+          {% for ersatzteile_techniker in ersatzteile_sro %}
           <tr>
             <td>{{ersatzteile_techniker.Anzahl}}
             <td>{{ersatzteile_techniker.Artikelnummer}}
