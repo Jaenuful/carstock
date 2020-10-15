@@ -391,6 +391,7 @@ def aka():
     ersatzteile_aka = ErsatzteileTechniker.query.filter_by(Techniker='AKA').all()
     return render_template('aka.html', ersatzteile_aka = ersatzteile_aka, title = 'aka')
 
+
 @app.route('/dhu', methods = ['Get','POST'])
 @login_required
 def dhu():
