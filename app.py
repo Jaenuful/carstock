@@ -313,6 +313,9 @@ def insert_ausgang():
             Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR)
         db.session.add(Neue_ErsatzteileAusgang)
 
+        if Lot == '':
+            Lot = None
+
         Ersatzteil = ErsatzteileTechniker.query.filter_by(
             Artikelnummer=Artikelnummer, Techniker=Techniker, Lot=Lot).first()
 
