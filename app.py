@@ -7,7 +7,7 @@ from sqlalchemy.orm.session import Session, sessionmaker
 import datetime as dt
 from sqlalchemy.dialects.postgresql import JSON
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, PasswordField, BooleanField, TextField, Form
+from wtforms import SelectField, StringField, PasswordField, BooleanField,TextField, Form
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -28,44 +28,34 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
 class LoginForm(FlaskForm):
-    username = StringField('username', validators=[
-                           InputRequired(), Length(min=3, max=15)])
-    password = PasswordField('password', validators=[
-                             InputRequired(), Length(min=4, max=80)])
+    username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=80)])
     remember = BooleanField('remember me')
 
-
 class RegisterForm(FlaskForm):
-    email = StringField('email', validators=[InputRequired(), Email(
-        message='Invalid email'), Length(max=50)])
-    username = StringField('username', validators=[
-                           InputRequired(), Length(min=3, max=15)])
-    password = PasswordField('password', validators=[
-                             InputRequired(), Length(min=4, max=80)])
-
+    email = StringField('email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    username = StringField('username', validators=[InputRequired(), Length(min=3, max=15)])
+    password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=80)])
 
 class ErsatzteileAlchemy(db.Model):
     __tablename__ = 'ersatzteile_alchemy'
-    Artikelnummer = Column(Integer(), unique=False)
+    Artikelnummer = Column(Integer(), unique=False) 
     Bezeichnung = Column(String(), unique=False, nullable=False)
     Details = Column(String(), unique=False, nullable=True)
     Geraet = Column(String(), unique=False, nullable=False)
     id = Column(Integer(), primary_key=True)
-
+    
     def __repr__(self):
         return '<Artikelnummer %r>' % self.id
 
@@ -75,72 +65,61 @@ class ErsatzteileAlchemy(db.Model):
         self.Details = Details
         self.Geraet = Geraet
 
-
 class ErsatzteileTechniker(db.Model):
     __tablename__ = 'ersatzteile_techniker'
     Techniker = Column(String(), nullable=False)
-    Anzahl = Column(Integer(), primary_key=False, nullable=False)
-    Artikelnummer = Column(Integer(), primary_key=False)
+    Anzahl = Column(Integer(), primary_key = False, nullable=False)
+    Artikelnummer = Column (Integer(), primary_key=False) 
     Bezeichnung = Column(String(), primary_key=False, unique=False)
-    Lot = Column(Integer(), primary_key=False, unique=False, nullable=True)
-    Ablaufdatum = Column(String(), primary_key=False, nullable=True)
-    Details = Column(String(), unique=False, nullable=True)
-    Geraet = Column(String(), unique=False, nullable=True)
-    Soll = Column(Integer(), primary_key=False, nullable=True)
-    Diff = Column(Integer(), primary_key=False, nullable=True)
+    Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
+    Ablaufdatum = Column (String(), primary_key=False, nullable=True)
+    Details = Column (String(), unique=False, nullable=True)
+    Geraet = Column (String(), unique=False, nullable=True)
     id = Column(Integer(), primary_key=True)
 
-    def __init__(self, Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, Soll, Diff):
+    def __init__(self, Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
         self.Techniker = Techniker
         self.Anzahl = Anzahl
-        self.Soll = Soll
-        self.Diff = Diff
         self.Artikelnummer = Artikelnummer
         self.Bezeichnung = Bezeichnung
         self.Lot = Lot
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
-        self.Geraet = Geraet
-
+        self.Geraet = Geraet 
 
 class ErsatzteileEingang(db.Model):
     __tablename__ = 'ersatzteile_eingang'
     Techniker = Column(String(), nullable=False)
     Datum = Column(String(), nullable=True)
     Anzahl = Column(Integer(), nullable=False)
-    #Soll = Column(Integer(), primary_key = False, nullable=True)
-    #Diff = Column(Integer(), primary_key = False, nullable=True)
-    Artikelnummer = Column(Integer(), unique=False)
-    Bezeichnung = Column(String(), unique=False)
-    Lot = Column(Integer(), unique=False, nullable=True)
-    Ablaufdatum = Column(String(), nullable=True)
-    Details = Column(String(), unique=False, nullable=True)
-    Geraet = Column(String(), unique=False, nullable=True)
+    Artikelnummer = Column (Integer(), unique=False) 
+    Bezeichnung = Column(String(),unique=False)
+    Lot = Column (Integer(),unique=False, nullable=True)
+    Ablaufdatum = Column (String(), nullable=True)
+    Details = Column (String(), unique=False, nullable=True)
+    Geraet = Column (String(), unique=False, nullable=True)
     id = Column(Integer(), primary_key=True)
-
+    
     def __init__(self, Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
         self.Techniker = Techniker
         self.Datum = Datum
         self.Anzahl = Anzahl
-        #self.Soll = Soll
-        #self.Diff = Diff
         self.Artikelnummer = Artikelnummer
         self.Bezeichnung = Bezeichnung
         self.Lot = Lot
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
-        self.Geraet = Geraet
-
+        self.Geraet = Geraet  
 
 class ErsatzteileAusgang(db.Model):
     __tablename__ = 'ersatzteile_ausgang'
     Techniker = Column(String(), nullable=False)
     Datum = Column(String(), nullable=True)
-    Anzahl = Column(Integer(), nullable=False)
-    Artikelnummer = Column(Integer(), unique=False)
+    Anzahl = Column(Integer(),nullable=False)
+    Artikelnummer = Column (Integer(),unique=False ) 
     Bezeichnung = Column(String(), unique=False)
-    Lot = Column(Integer(), unique=False, nullable=True)
-    Kunde = Column(String(), unique=False, nullable=True)
+    Lot = Column (Integer(),unique=False, nullable=True)
+    Kunde = Column (String(), unique=False, nullable=True)
     SMR = Column(Integer(), unique=False, nullable=True)
     id = Column(Integer(), primary_key=True)
 
@@ -154,16 +133,15 @@ class ErsatzteileAusgang(db.Model):
         self.Kunde = Kunde
         self.SMR = SMR
 
-
 class ErsatzteileBestellungen(db.Model):
     __tablename__ = 'ersatzteile_bestellungen'
     Techniker = Column(String(), nullable=False, unique=False)
     Bestelldatum = Column(String(), nullable=True, unique=False)
     Anzahl = Column(Integer(), nullable=False)
-    Artikelnummer = Column(Integer(), unique=False)
+    Artikelnummer = Column (Integer(), unique=False) 
     Bezeichnung = Column(String(), unique=False, nullable=True)
-    Details = Column(String(), unique=False, nullable=True)
-    Geraet = Column(String(), unique=False, nullable=True)
+    Details = Column (String(), unique=False, nullable=True)
+    Geraet = Column (String(), unique=False, nullable=True)
     Erhalten_am = Column(String(), nullable=True, unique=False)
     id = Column(Integer(), primary_key=True)
 
@@ -172,21 +150,20 @@ class ErsatzteileBestellungen(db.Model):
         self.Bestelldatum = Bestelldatum
         self.Anzahl = Anzahl
         self.Artikelnummer = Artikelnummer
-        self.Bezeichnung = Bezeichnung
+        self.Bezeichnung = Bezeichnung  
         self.Details = Details
         self.Geraet = Geraet
         self.Erhalten_am = Erhalten_am
 
-
 class ErsatzteileKonrad(db.Model):
     __tablename__ = 'ersatzteile_konrad'
-    Anzahl = Column(Integer(), primary_key=False, nullable=False)
-    Artikelnummer = Column(Integer(), primary_key=True)
+    Anzahl = Column(Integer(), primary_key = False, nullable=False)
+    Artikelnummer = Column (Integer(), primary_key=True) 
     Bezeichnung = Column(String(), primary_key=False, unique=False)
-    Lot = Column(Integer(), primary_key=False, unique=False, nullable=True)
-    Ablaufdatum = Column(String(), primary_key=False, nullable=True)
-    Details = Column(String(), unique=False, nullable=True)
-    Geraet = Column(String(), unique=False, nullable=True)
+    Lot = Column (Integer(), primary_key=False, unique=False, nullable=True)
+    Ablaufdatum = Column (String(), primary_key=False, nullable=True)
+    Details = Column (String(), unique=False, nullable=True)
+    Geraet = Column (String(), unique=False, nullable=True)
 
     def __init__(self, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet):
         self.Anzahl = Anzahl
@@ -196,8 +173,7 @@ class ErsatzteileKonrad(db.Model):
         self.Ablaufdatum = Ablaufdatum
         self.Details = Details
         self.Geraet = Geraet
-
-
+    
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -213,22 +189,18 @@ def login():
 
     return render_template('login.html', form=form, title=login)
 
-
 @app.route('/signup', methods=['GET', 'POST'])
-@login_required
-def signup():
+@login_required  
+def signup():  
     form = RegisterForm()
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(
-            form.password.data, method='sha256')
-        new_user = User(username=form.username.data,
-                        email=form.email.data, password=hashed_password)
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
         return '<h1>New user has been created!</h1>'
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
     return render_template('signup.html', form=form)
-
 
 @app.route('/logout')
 @login_required
@@ -236,20 +208,18 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-
-@app.route('/eingang', methods=['Get', 'POST'])
+@app.route('/eingang', methods = ['Get','POST'])
 @login_required
 def eingang():
     ersatzteile_eingang = ErsatzteileEingang.query.all()
-    return render_template('eingang.html', ersatzteile_eingang=ersatzteile_eingang, title='eingang')
+    return render_template('eingang.html', ersatzteile_eingang = ersatzteile_eingang, title = 'eingang')
 
-
-@app.route('/eingang-insert', methods=['Get', 'POST'])
+@app.route('/eingang-insert', methods = ['Get','POST'])
 @login_required
 def insert_eingang():
     if request.method == 'POST':
         Techniker = request.form['Techniker']
-        Datum = request.form['Datum']
+        Datum =  request.form['Datum']
         Anzahl = request.form['Anzahl']
         Artikelnummer = request.form['Artikelnummer']
         Bezeichnung = request.form['Bezeichnung']
@@ -257,48 +227,39 @@ def insert_eingang():
         Ablaufdatum = request.form['Ablaufdatum']
         Details = request.form['Details']
         Geraet = request.form['Geraet']
-        Soll = request.form['Soll']
 
         if Lot == '':
             Lot = None
-
-        Neue_ErsatzteileEingang = ErsatzteileEingang(
-            Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+        
+        Neue_ErsatzteileEingang = ErsatzteileEingang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileEingang)
 
-        Ersatzteil = ErsatzteileTechniker.query.filter_by(
-            Artikelnummer=Artikelnummer, Techniker=Techniker, Lot=Lot).first()
+        Ersatzteil = ErsatzteileTechniker.query.filter_by(Artikelnummer = Artikelnummer, Techniker = Techniker, Lot = Lot).first()
 
         if Ersatzteil != None:
             Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
-            delete_ErsatzteileTechniker = ErsatzteileTechniker.query.get(
-                Ersatzteil.id)
+            delete_ErsatzteileTechniker = ErsatzteileTechniker.query.get(Ersatzteil.id)
             db.session.delete(delete_ErsatzteileTechniker)
 
-        Diff = int(Anzahl) - int(Soll)
-
-        Neue_ErsatzteileTechniker = ErsatzteileTechniker(
-            Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet, Soll, Diff)
+        Neue_ErsatzteileTechniker = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
 
         db.session.add(Neue_ErsatzteileTechniker)
-        db.session.commit()
+        db.session.commit() 
         flash('Eintrag Erfolgreich.')
-        return redirect(url_for('eingang'))
-
+        return redirect(url_for('eingang'))  
 
 @app.route('/ausgang')
 @login_required
 def ausgang():
     ersatzteile_ausgang = ErsatzteileAusgang.query.all()
-    return render_template('ausgang.html', ersatzteile_ausgang=ersatzteile_ausgang, title='Ausgang')
+    return render_template('ausgang.html', ersatzteile_ausgang = ersatzteile_ausgang, title = 'Ausgang')
 
-
-@app.route('/ausgang-insert', methods=['POST'])
+@app.route('/ausgang-insert', methods = ['POST'])
 @login_required
 def insert_ausgang():
     if request.method == 'POST':
         Techniker = request.form['Techniker']
-        Datum = request.form['Datum']
+        Datum =  request.form['Datum']
         Anzahl = request.form['Anzahl']
         Artikelnummer = request.form['Artikelnummer']
         Bezeichnung = request.form['Bezeichnung']
@@ -309,39 +270,25 @@ def insert_ausgang():
         if Lot == '':
             Lot = None
 
-        
+        Neue_ErsatzteileAusgang = ErsatzteileAusgang (Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR)
+        db.session.add(Neue_ErsatzteileAusgang)
 
-        if Lot == '':
-            Lot = None
-
-        Ersatzteil = ErsatzteileTechniker.query.filter_by(
-            Artikelnummer=Artikelnummer, Techniker=Techniker, Lot=Lot).first()
+        Ersatzteil = ErsatzteileTechniker.query.filter_by(Artikelnummer = Artikelnummer, Techniker = Techniker, Lot = Lot).first()
 
         if Ersatzteil != None:
             Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
             Ersatzteil.Anzahl = Anzahl
+            db.session.commit
 
-        
-        Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
-        Ersatzteil.Anzahl = Anzahl
-
-
-        Neue_ErsatzteileAusgang = ErsatzteileAusgang(
-            Techniker, Datum, Anzahl, Artikelnummer, Bezeichnung, Lot, Kunde, SMR)
-        
-        db.session.add(Neue_ErsatzteileAusgang)
-        db.session.commit
-
+        db.session.commit() 
         flash('Eintrag Erfolgreich.')
-        return redirect(url_for('ausgang'))
+        return redirect(url_for('ausgang')) 
 
-
-@app.route('/ausgang-update', methods=['GET', 'POST'])
+@app.route('/ausgang-update', methods = ['GET','POST'])   
 @login_required
 def update_ausgang():
     if request.method == 'POST':
-        Update_ErsatzteileAusgang = ErsatzteileAusgang.query.get(
-            request.form.get('id'))
+        Update_ErsatzteileAusgang = ErsatzteileAusgang.query.get(request.form.get('id'))
         Update_ErsatzteileAusgang.Techniker = request.form['Techniker']
         Update_ErsatzteileAusgang.Datum = request.form['Datum']
         Update_ErsatzteileAusgang.Anzahl = request.form['Anzahl']
@@ -357,24 +304,40 @@ def update_ausgang():
         flash("Update Erfolgreich.")
         return redirect(url_for('ausgang'))
 
+@app.route('/eingang-update', methods = ['GET','POST'])   
+@login_required
+def update_eingang():
+    if request.method == 'POST':
+        Update_ErsatzteileEingang = ErsatzteileEingang.query.get(request.form.get('id'))
+        Update_ErsatzteileEingang.Techniker = request.form['Techniker']
+        Update_ErsatzteileEingang.Datum = request.form['Datum']
+        Update_ErsatzteileEingang.Anzahl = request.form['Anzahl']
+        Update_ErsatzteileEingang.Artikelnummer = request.form['Artikelnummer']
+        Update_ErsatzteileEingang.Bezeichnung = request.form['Bezeichnung']
+        Update_ErsatzteileEingang.Lot = request.form['Lot']
+        Update_ErsatzteileEingang.Ablaufdatum = request.form['Ablaufdatum']
+        Update_ErsatzteileEingang.Details = request.form['Details']
+        Update_ErsatzteileEingang.Geraet = request.form['Geraet']
 
-@app.route('/jwi', methods=['Get', 'POST'])
+        if Update_ErsatzteileEingang.Lot == '':
+            Update_ErsatzteileEingang.Lot = None
+        db.session.commit()
+        flash("Update Erfolgreich.")
+        return redirect(url_for('eingang'))
+
+@app.route('/jwi', methods = ['Get','POST'])
 @login_required
 def jwi():
-    ersatzteile_jwi = ErsatzteileTechniker.query.filter_by(
-        Techniker='JWI').all()
-    return render_template('jwi.html', ersatzteile_jwi=ersatzteile_jwi, title='jwi')
+    ersatzteile_jwi = ErsatzteileTechniker.query.filter_by(Techniker='JWI').all()
+    return render_template('jwi.html', ersatzteile_jwi = ersatzteile_jwi, title = 'jwi')
 
-
-@app.route('/kzb', methods=['Get', 'POST'])
+@app.route('/kzb', methods = ['Get','POST'])
 @login_required
 def kzb():
-    ersatzteile_kzb = ErsatzteileTechniker.query.filter_by(
-        Techniker='KZB').all()
-    return render_template('kzb.html', ersatzteile_kzb=ersatzteile_kzb, title='kzb')
+    ersatzteile_kzb = ErsatzteileTechniker.query.filter_by(Techniker='KZB').all()
+    return render_template('kzb.html', ersatzteile_kzb = ersatzteile_kzb, title = 'kzb')
 
-
-@app.route('/kzb-insert', methods=['POST'])
+@app.route('/kzb-insert', methods = ['POST'])
 @login_required
 def insert_kzb():
     if request.method == 'POST':
@@ -389,15 +352,31 @@ def insert_kzb():
         if Lot == '':
             Lot = None
 
-        Neue_ErsatzteileKonrad = ErsatzteileKonrad(
-            Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+        Neue_ErsatzteileKonrad = ErsatzteileKonrad (Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
         db.session.add(Neue_ErsatzteileKonrad)
-        db.session.commit()
+        db.session.commit() 
         flash('Eintrag Erfolgreich.')
+        return redirect(url_for('kzb'))  
+
+@app.route('/kzb-update', methods = ['GET','POST']) 
+@login_required  
+def update_kzb():
+    if request.method == 'POST':
+        Update_ErsatzteileKonrad = ErsatzteileKonrad.query.get(request.form.get('Artikelnummer'))
+        Update_ErsatzteileKonrad.Anzahl = request.form['Anzahl']
+        Update_ErsatzteileKonrad.Bezeichnung = request.form['Bezeichnung']
+        Update_ErsatzteileKonrad.Lot = request.form['Lot']
+        Update_ErsatzteileKonrad.Ablaufdatum = request.form['Ablaufdatum']
+        Update_ErsatzteileKonrad.Details = request.form['Details']
+        Update_ErsatzteileKonrad.Geraet = request.form['Geraet']
+
+        if Update_ErsatzteileKonrad.Lot == '':
+            Update_ErsatzteileKonrad.Lot = None
+        db.session.commit()
+        flash("Update Erfolgreich.")
         return redirect(url_for('kzb'))
 
-
-@app.route('/kzb-delete/<Artikelnummer>/', methods=['GET', 'POST'])
+@app.route('/kzb-delete/<Artikelnummer>/', methods = ['GET', 'POST'])
 @login_required
 def delete_kzb(Artikelnummer):
     Delete_ErsatzteileKonrad = ErsatzteileKonrad.query.get(Artikelnummer)
@@ -406,45 +385,38 @@ def delete_kzb(Artikelnummer):
     flash("Eintrag erfolgreich gelöscht.")
     return redirect(url_for('kzb'))
 
-#@app.route('/aka', methods = ['Get','POST'])
-#@login_required
-#def aka():
-    ersatzteile_aka = ErsatzteileTechniker.query.filter_by(
-        Techniker='AKA').all()
-    return render_template('aka.html', ersatzteile_aka=ersatzteile_aka, title='aka')
+@app.route('/aka', methods = ['Get','POST'])
+@login_required
+def aka():
+    ersatzteile_aka = ErsatzteileTechniker.query.filter_by(Techniker='AKA').all()
+    return render_template('aka.html', ersatzteile_aka = ersatzteile_aka, title = 'aka')
 
-@app.route('/dhu', methods=['Get', 'POST'])
+
+@app.route('/dhu', methods = ['Get','POST'])
 @login_required
 def dhu():
-    ersatzteile_dhu = ErsatzteileTechniker.query.filter_by(
-        Techniker='DHU').all()
-    return render_template('dhu.html', ersatzteile_dhu=ersatzteile_dhu, title='dhu')
+    ersatzteile_dhu = ErsatzteileTechniker.query.filter_by(Techniker='DHU').all()
+    return render_template('dhu.html', ersatzteile_dhu = ersatzteile_dhu, title = 'dhu')
 
-
-@app.route('/vgu', methods=['Get', 'POST'])
+@app.route('/vgu', methods = ['Get','POST'])
 @login_required
 def vgu():
-    ersatzteile_vgu = ErsatzteileTechniker.query.filter_by(
-        Techniker='VGU').all()
-    return render_template('vgu.html', ersatzteile_vgu=ersatzteile_vgu, title='vgu')
+    ersatzteile_vgu = ErsatzteileTechniker.query.filter_by(Techniker='VGU').all()
+    return render_template('vgu.html', ersatzteile_vgu = ersatzteile_vgu, title = 'vgu')
 
-
-@app.route('/sro', methods=['Get', 'POST'])
+@app.route('/sro', methods = ['Get','POST'])
 @login_required
 def sro():
-    ersatzteile_sro = ErsatzteileTechniker.query.filter_by(
-        Techniker='SRO').all()
-    return render_template('sro.html', ersatzteile_sro=ersatzteile_sro, title='sro')
-
+    ersatzteile_sro = ErsatzteileTechniker.query.filter_by(Techniker='SRO').all()
+    return render_template('sro.html', ersatzteile_sro = ersatzteile_sro, title = 'sro')
 
 @app.route('/ersatzteilliste')
 @login_required
 def ersatzteilliste():
     Ersatzteile = ErsatzteileAlchemy.query.all()
-    return render_template('ersatzteilliste.html', Ersatzteile=Ersatzteile, title='Ersatzteilliste')
+    return render_template('ersatzteilliste.html', Ersatzteile = Ersatzteile, title = 'Ersatzteilliste')
 
-
-@app.route('/ersatzteilliste-insert', methods=['POST'])
+@app.route('/ersatzteilliste-insert', methods = ['POST'])
 @login_required
 def insert_ersatzteilliste():
     if request.method == 'POST':
@@ -453,15 +425,13 @@ def insert_ersatzteilliste():
         Details = request.form['Details']
         Geraet = request.form['Geraet']
 
-        Neue_ErsatzteileAlchemy = ErsatzteileAlchemy(
-            Artikelnummer, Bezeichnung, Details, Geraet)
+        Neue_ErsatzteileAlchemy = ErsatzteileAlchemy (Artikelnummer, Bezeichnung, Details, Geraet)
         db.session.add(Neue_ErsatzteileAlchemy)
-        db.session.commit()
+        db.session.commit() 
         flash('Eintrag Erfolgreich.')
-        return redirect(url_for('ersatzteilliste'))
+        return redirect(url_for('ersatzteilliste'))  
 
-
-@app.route('/ersatzteilliste-delete/<ID>/', methods=['GET', 'POST'])
+@app.route('/ersatzteilliste-delete/<ID>/', methods = ['GET', 'POST'])
 @login_required
 def delete_liste(ID):
     Delete_ErsatzteileAlchemy = ErsatzteileAlchemy.query.get(ID)
@@ -469,51 +439,26 @@ def delete_liste(ID):
     db.session.commit()
     return redirect(url_for('ersatzteilliste'))
 
-
-@app.route('/', methods=['Get'])
+@app.route('/', methods = ['Get'])
 @login_required
 def index():
     form = RegisterForm()
     current_user = User.query.filter_by(username='curent_user').all()
-    return render_template('index.html', title='Index', form=form, current_user=current_user)
+    return render_template('index.html', title = 'Index', form = form, current_user=current_user)
 
-
-@app.route('/carstock', methods=['Get', 'POST'])
+@app.route('/carstock', methods = ['Get','POST'])
 @login_required
 def techniker():
     ersatzteile_techniker = ErsatzteileTechniker.query.all()
-    return render_template('carstock.html', ersatzteile_techniker=ersatzteile_techniker, title='Carstock-Techniker')
+    return render_template('carstock.html', ersatzteile_techniker = ersatzteile_techniker, title = 'Carstock-Techniker')
 
-#Soll-Edit
-@app.route('/carstock-update', methods=['GET', 'POST'])
-@login_required
-def update_carstock():
-    if request.method == 'POST':
-        Update_ErsatzteileTechniker = ErsatzteileTechniker.query.get(
-            request.form.get('id'))
-        Update_ErsatzteileTechniker.Anzahl = request.form['Anzahl']
-        Update_ErsatzteileTechniker.Artikelnummer = request.form['Artikelnummer']
-        Update_ErsatzteileTechniker.Bezeichnung = request.form['Bezeichnung']
-        Update_ErsatzteileTechniker.Lot = request.form['Lot']
-        Update_ErsatzteileTechniker.Ablaufdatum = request.form['Ablaufdatum']
-        Update_ErsatzteileTechniker.Details = request.form['Details']
-        Update_ErsatzteileTechniker.Geraet = request.form['Geraet']
-        Update_ErsatzteileTechniker.Soll = request.form['Soll']
-        Update_ErsatzteileTechniker.Diff = int(
-            Update_ErsatzteileTechniker.Anzahl) - int(Update_ErsatzteileTechniker.Soll)
-
-        db.session.commit()
-        return redirect(request.referrer)
-
-
-@app.route('/bestellungen', methods=['GET', 'POST'])
+@app.route('/bestellungen', methods = ['GET','POST'])
 @login_required
 def bestellungen():
     ersatzteile_bestellungen = ErsatzteileBestellungen.query.all()
-    return render_template('bestellungen.html', ersatzteile_bestellungen=ersatzteile_bestellungen, title='bestellungen')
+    return render_template('bestellungen.html', ersatzteile_bestellungen = ersatzteile_bestellungen, title = 'bestellungen')
 
-
-@app.route('/bestellungen-insert', methods=['GET', 'POST'])
+@app.route('/bestellungen-insert', methods = ['GET','POST'])
 @login_required
 def insert_bestellungen():
     if request.method == 'POST':
@@ -526,22 +471,19 @@ def insert_bestellungen():
         Geraet = request.form['Geraet']
         Erhalten_am = request.form['Erhalten_am']
 
-        Neue_ErsatzteileBestellungen = ErsatzteileBestellungen(
-            Techniker, Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am)
+        Neue_ErsatzteileBestellungen = ErsatzteileBestellungen (Techniker, Bestelldatum, Anzahl, Artikelnummer, Bezeichnung, Details, Geraet, Erhalten_am)
         db.session.add(Neue_ErsatzteileBestellungen)
-        db.session.commit()
+        db.session.commit() 
         flash('Eintrag Erfolgreich.')
-        return redirect(url_for('bestellungen'))
+        return redirect(url_for('bestellungen'))  
 
-
-@app.route('/bestellungen-update', methods=['GET', 'POST'])
-@login_required
+@app.route('/bestellungen-update', methods = ['GET','POST'])  
+@login_required 
 def update_bestellungen():
     if request.method == 'POST':
-        Update_Bestellungen = ErsatzteileBestellungen.query.get(
-            request.form.get('id'))
+        Update_Bestellungen = ErsatzteileBestellungen.query.get(request.form.get('id'))
         Update_Bestellungen.Techniker = request.form['Techniker']
-        Update_Bestellungen.Bestelldatum = request.form['Bestelldatum']
+        Update_Bestellungen.Bestelldatum = request.form['Bestelldatum']      
         Update_Bestellungen.Anzahl = request.form['Anzahl']
         Update_Bestellungen.Bezeichnung = request.form['Bezeichnung']
         Update_Bestellungen.Details = request.form['Details']
@@ -551,8 +493,7 @@ def update_bestellungen():
         flash("Update Erfolgreich.")
         return redirect(url_for('bestellungen'))
 
-
-@app.route('/delete_bestellungen/<id>/', methods=['GET', 'POST'])
+@app.route('/delete_bestellungen/<id>/', methods = ['GET', 'POST'])
 @login_required
 def delete_bestellungen(id):
     Delete_Bestellungen = ErsatzteileBestellungen.query.get(id)
@@ -560,7 +501,6 @@ def delete_bestellungen(id):
     db.session.commit()
     flash("Eintrag erfolgreich gelöscht.")
     return redirect(url_for('bestellungen'))
-
 
 if __name__ == '__main__':
     app.run()

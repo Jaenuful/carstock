@@ -66,103 +66,33 @@
     </div>
   </nav>
   <div class="modal-body">
-    <div class="mx-auto">
+    <div class="mx-auto">  
       <table id="proxies" class="display table nowrap responsive" style="width: 100%">
         <thead class="thead-dark">
           <tr>
             <th>Anzahl
-            <th>Soll
-            <th>Diff
             <th>Ref
             <th>Bezeichnung
             <th>Lot
             <th>Ablaufdatum
             <th>Details
             <th>Gerät
-            <th>Kit
-            <th>
         </thead>
         <tbody>
           {% for ersatzteile_techniker in ersatzteile_dhu %}
           <tr>
             <td>{{ersatzteile_techniker.Anzahl}}
-            <td>{{ersatzteile_techniker.Soll}}
-            <td>{{ersatzteile_techniker.Diff}}
             <td>{{ersatzteile_techniker.Artikelnummer}}
             <td>{{ersatzteile_techniker.Bezeichnung}}
             <td>{{ersatzteile_techniker.Lot}}
             <td>{{ersatzteile_techniker.Ablaufdatum}}
             <td>{{ersatzteile_techniker.Details}}
             <td>{{ersatzteile_techniker.Geraet}}
-            <td>{{ersatzteile_techniker.Kit}}
-            <td>
-              <div class="btn-group float-sm-right" role="group">
-                <a href="/update_carstock/{{ersatzteile_techniker.id}}"
-                  class="btn btn-outline-info btn-xs float-sm-right" data-toggle="modal"
-                  data-target="#modaledit{{ersatzteile_techniker.id}}">Soll</a>
           </tr>
     </div>
-
-    <!-- Modal Soll Edit-->
-    <div id="modaledit{{ ersatzteile_techniker.id }}" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Soll hinzufügen für
-              {{ersatzteile_techniker.Artikelnummer}}-{{ersatzteile_techniker.Bezeichnung}}
-            </h4>
-          </div>
-
-          <div class="modal-body">
-            <form action="{{url_for('update_carstock')}}" method="POST">
-              <div class="form-group">
-                <input type="hidden" name="id" value="{{ersatzteile_techniker.id}}">
-              </div>
-              <div class="form-group">
-                <input type="hidden" name="Anzahl" value="{{ersatzteile_techniker.Anzahl}}">
-              </div>
-              <div class="form-group">
-                <input type="hidden" name="Artikelnummer" value="{{ersatzteile_techniker.Artikelnummer}}">
-              </div>
-              <div class="form-group">
-                <input type="hidden" name="Bezeichnung" value="{{ersatzteile_techniker.Bezeichnung}}">
-              </div>
-              <div class="form-group">
-                <input type="hidden" name="Lot" value="{{ersatzteile_techniker.Lot}}">
-              </div>
-              <div class="form-group">
-                <input type="hidden" name="Ablaufdatum" value="{{ersatzteile_techniker.Ablaufdatum}}">
-              </div>
-              <div class="form-group">
-                <input type="hidden" name="Details" value="{{ersatzteile_techniker.Details}}">
-              </div>
-              <div class="form-group">
-                <input type="hidden" name="Geraet" value="{{ersatzteile_techniker.Geraet}}">
-              </div>
-              <div class="form-group">
-                <input type="number" name="Soll" value="{{ersatzteile_techniker.Soll}}">
-              </div>
-              <div class="form-group">
-                <input type="hidden" name="Diff" value="{{ersatzteile_techniker.Diff}}">
-              </div>
-
-              <div class="form-group">
-                <button class="btn btn-primary" type="submit">Hinzufügen</button>
-              </div>
-            </form>
-
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
-            </div>
-          </div>
+    {% endfor %}
+          </table>
         </div>
-      </div>
-    </div>
-  </div>
-  </div>
-  {% endfor %}
-  </table>
-  </div>
-  </tbody>
-</body>
-{% endblock %}
+        </tbody>
+      </body>
+      {% endblock %}
