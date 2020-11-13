@@ -277,15 +277,12 @@ def insert_ausgang():
 
         if Ersatzteil != None:
             Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
-            delete_ErsatzteileTechniker = ErsatzteileTechniker.query.get(Ersatzteil.id)
-            db.session.delete(delete_ErsatzteileTechniker)
+            Ersatzteil.Anzahl = Anzahl
+            db.session.commit
 
-        Neue_ErsatzteileAusgang = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
-
-        db.session.add(Neue_ErsatzteileAusgang)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
-        return redirect(url_for('ausgang')) 
+        return redirect(url_for('ausgang'))
 
 @app.route('/ausgang-update', methods = ['GET','POST'])   
 @login_required
