@@ -277,9 +277,12 @@ def insert_ausgang():
 
         if Ersatzteil != None:
             Anzahl = int(Ersatzteil.Anzahl) + int(Anzahl)
-            Ersatzteil.Anzahl = Anzahl
-            db.session.commit
+            delete_ErsatzteileTechniker = ErsatzteileTechniker.query.get(Ersatzteil.id)
+            db.session.delete(delete_ErsatzteileTechniker)
 
+        Neue_ErsatzteileAusgang = ErsatzteileTechniker (Techniker, Anzahl, Artikelnummer, Bezeichnung, Lot, Ablaufdatum, Details, Geraet)
+
+        db.session.add(Neue_ErsatzteileAusgang)
         db.session.commit() 
         flash('Eintrag Erfolgreich.')
         return redirect(url_for('ausgang')) 
